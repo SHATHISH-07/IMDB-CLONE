@@ -56,43 +56,43 @@ app.get("/", (req, res) => {
 });
 
 // user, login, watchList
-app.use("/users", userRouter);
-app.use("/login", loginRouter);
+app.use("/api/users", userRouter);
+app.use("/api/login", loginRouter);
 app.use(
-  "/movie/watchList",
+  "/api/movie/watchList",
   middleware.tokenExtractor,
   middleware.userExtractor,
   watchListRouter
 );
 
 // movie
-app.use("/movie/genres", genresRouter);
-app.use("/movie/image", movieImageRouter);
-app.use("/movie/video", movieVideoRouter);
-app.use("/movie/review", movieReviewRouter);
-app.use("/movie/now_playing", nowPlayingRouter);
-app.use("/movie/popular", popularMovieRouter);
-app.use("/movie/recommend", recommendMovieRouter);
-app.use("/movie/search", searchMoviesRouter);
-app.use("/movie/top_rated", topRatedMovieRouter);
-app.use("/movie/trending", trendingMovieRouter);
-app.use("/movie/upcoming", upcomingMovieRouter);
+app.use("/api/movie/genres", genresRouter);
+app.use("/api/movie/image", movieImageRouter);
+app.use("/api/movie/video", movieVideoRouter);
+app.use("/api/movie/review", movieReviewRouter);
+app.use("/api/movie/now_playing", nowPlayingRouter);
+app.use("/api/movie/popular", popularMovieRouter);
+app.use("/api/movie/recommend", recommendMovieRouter);
+app.use("/api/movie/search", searchMoviesRouter);
+app.use("/api/movie/top_rated", topRatedMovieRouter);
+app.use("/api/movie/trending", trendingMovieRouter);
+app.use("/api/movie/upcoming", upcomingMovieRouter);
 
 // person
-app.use("/person", personRouter);
+app.use("/api/person", personRouter);
 
 // tvShow
-app.use("/tv/genres", genreTvRouter);
-app.use("/tv/now_playing", nowPlayingTvRouter);
-app.use("/tv/on_air", onAirTvRouter);
-app.use("/tv/popular", popularTvRouter);
-app.use("/tv/recommend", recommendTvRouter);
-app.use("/tv/search", searchTvRouter);
-app.use("/tv/top_rated", topRatedTvRouter);
-app.use("/tv/trending", trendingTvRouter);
-app.use("/tv/review", tvReviewsRouter);
-app.use("/tv/image", tvShowImageRouter);
-app.use("/tv/video", tvVideoRouter);
+app.use("/api/tv/genres", genreTvRouter);
+app.use("/api/tv/now_playing", nowPlayingTvRouter);
+app.use("/api/tv/on_air", onAirTvRouter);
+app.use("/api/tv/popular", popularTvRouter);
+app.use("/api/tv/recommend", recommendTvRouter);
+app.use("/api/tv/search", searchTvRouter);
+app.use("/api/tv/top_rated", topRatedTvRouter);
+app.use("/api/tv/trending", trendingTvRouter);
+app.use("/api/tv/review", tvReviewsRouter);
+app.use("/api/tv/image", tvShowImageRouter);
+app.use("/api/tv/video", tvVideoRouter);
 
 // error handling
 app.use(middleware.unknownEndpoint);

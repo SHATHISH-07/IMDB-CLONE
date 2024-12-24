@@ -41,4 +41,16 @@ watchListRouter.post("/", async (req, res) => {
   }
 });
 
+watchListRouter.delete("/:id", async (req, res) => {
+  try {
+    const deletedWatchList = await WatchList.findByIdAndDelete(req.params.id);
+    if (!deletedWatchList) {
+      return res.status(404).json({ error: "WatchList not found." });
+    }
+    res.json({ message: "WatchList deleted successfully." });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete watchList." });
+  }
+});
+
 module.exports = watchListRouter;
