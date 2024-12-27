@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const WatchListSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   movieId: {
     type: Number,
     required: true,
@@ -26,9 +30,14 @@ const WatchListSchema = new mongoose.Schema({
     default: Date.now,
   },
 
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+  rating: {
+    type: Number,
+    min: 0,
+    max: 10,
+  },
+
+  releasedAt: {
+    type: String,
   },
 });
 

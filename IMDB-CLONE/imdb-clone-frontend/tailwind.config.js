@@ -8,6 +8,9 @@ export default {
         customBlack: "#121212",
         customHover: "#3b82f6",
       },
+      screens: {
+        "custom-sm": "630px",
+      },
     },
   },
 };

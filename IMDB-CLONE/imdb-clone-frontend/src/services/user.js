@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "/api/movie/watchList";
+const baseUrl = "/api/users";
 let token = null;
 
 // Set the token for authorization

@@ -23,7 +23,7 @@ const DropDown = ({ selectedOption, setSelectedOption }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 right-0 left-0 mt-2 w-40 bg-white border border-gray-300 dark:bg-black dark:border-gray-600 rounded-md shadow-lg">
+        <div className="absolute z-20 right-0 left-0 mt-2 w-40 bg-white border border-gray-300 dark:bg-black dark:border-gray-600 rounded-md shadow-lg">
           <ul className="py-2">
             <li
               onClick={() => handleSelect("movie")}

@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import HeroSection from "./components/HeroSection";
+import Footer from "./components/Footer";
+import HomePage from "./components/HomePage";
+import SignUpSection from "./components/SignUpSection";
+import LoginSection from "./components/LoginSection";
+import WatchList from "./components/WatchList";
+import user from "./services/user";
+import login from "./services/login";
+import watchList from "./services/watchList";
 import trendingMovie from "./services/movies/trendingMovie";
 import getNowPlayingMovie from "./services/movies/nowPlaying";
 import genre from "./services/movies/genre";
 import genreTv from "./services/tvShows/genreTv";
-import HorizontalCards from "./components/HorizontalCards";
-import PersonsScrollComponent from "./components/PersonScrollComponent";
 import getTopRatedMovie from "./services/movies/topRatedMovie";
 import getPopularMovie from "./services/movies/popularMovie";
 import getUpcomingMovie from "./services/movies/upcomingMovie";
@@ -15,339 +21,254 @@ import getPopularTv from "./services/tvShows/popularTv";
 import getTopRatedTv from "./services/tvShows/topRatedTv";
 import trendingTv from "./services/tvShows/trendingTv";
 import person from "./services/persons/person";
-import Banner from "./components/Banner";
 
 const App = () => {
-  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [trendingMoviesDay, setTrendingMoviesDay] = useState([]);
+  const [trendingMoviesWeek, setTrendingMoviesWeek] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [popularMovies, setPopularMovies] = useState([]);
   const [nowPlayingMovie, setNowPlayingMovie] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
-  const [trendingTvShows, setTrendingTvShows] = useState([]);
+  const [trendingTvShowsDay, setTrendingTvShowsDay] = useState([]);
+  const [trendingTvShowsWeek, setTrendingTvShowsWeek] = useState([]);
   const [topRatedTvShows, setTopRatedTvShows] = useState([]);
   const [popularTvShows, setPopularTvShows] = useState([]);
   const [onAirTvShows, setOnAirTvShows] = useState([]);
   const [persons, setPersons] = useState([]);
-  const [movie, setMovie] = useState(null);
-  const [nowPlayingHeroMovies, setNowPlayingHeroMovies] = useState([]);
-  const [page, setPage] = useState(1);
-  const [heroPage, setHeroPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState([]);
   const [tvGenres, setTvGenres] = useState([]);
+  const [watchlist, setWatchlist] = useState([]);
 
-  useEffect(() => {
-    const fetchHeroMovies = async () => {
-      try {
-        setLoading(true);
-        const response = await getNowPlayingMovie(heroPage);
-        setNowPlayingHeroMovies(response.results || []);
-        if (response.results?.length) {
-          setMovie(response.results[0]); // Set the first movie as default
-        }
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      } finally {
-        setLoading(false);
-      }
+  const [page, setPage] = useState(1);
+
+  const navigate = useNavigate();
+
+  // Handle login
+  const handleLogin = async ({ username, password }) => {
+    try {
+      const loggedInUser = await login({ username, password });
+      window.localStorage.setItem("loggedUser", JSON.stringify(loggedInUser));
+      watchList.setToken(loggedInUser.token);
+
+      setCurrentUser(loggedInUser);
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+    }
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedUser");
+    setCurrentUser(null);
+    watchList.setToken(null);
+    navigate("/");
+  };
+
+  // Handle sign up
+  const handleSignUp = async ({ username, password, name }) => {
+    try {
+      const newUser = await user.create({ username, password, name });
+      window.localStorage.setItem("loggedUser", JSON.stringify(newUser));
+
+      navigate("/login");
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+  };
+
+  // Watchlist
+  const handleAddToWatchList = async (movie, type) => {
+    const movieData = {
+      movieId: movie.id,
+      title: type === "movie" ? movie.title : movie.name,
+      poster_path: movie.poster_path,
+      mediaType: type,
+      rating: movie.vote_average,
+      releasedAt: type === "movie" ? movie.release_date : movie.first_air_date,
     };
 
-    fetchHeroMovies();
+    const isAlreadyInWatchlist = watchlist.some(
+      (item) => item.movieId === movie.id
+    );
+    if (isAlreadyInWatchlist) {
+      console.log("Movie is already in the watchlist");
+      return;
+    }
 
-    const pageInterval = setInterval(() => {
-      setHeroPage((prevPage) => (prevPage < 245 ? prevPage + 1 : 1));
-    }, 40000);
+    try {
+      const newWatchList = await watchList.create(movieData);
+      setWatchlist((prevWatchlist) => [...prevWatchlist, newWatchList]);
+    } catch (error) {
+      console.error("Error adding movie to watch list:", error);
+      if (error.response && error.response.status === 401) {
+        handleLogout();
+      }
+    }
+  };
 
-    return () => clearInterval(pageInterval);
-  }, [heroPage]);
+  const handleRemoveFromWatchList = async (movieId) => {
+    setWatchlist((prevWatchlist) =>
+      prevWatchlist.filter((movie) => movie.movieId !== movieId)
+    );
+
+    try {
+      await watchList.remove(movieId);
+
+      fetchWatchList();
+    } catch (error) {
+      console.error("Error removing movie from watch list:", error);
+
+      setWatchlist((prevWatchlist) => [
+        ...prevWatchlist,
+        watchlist.find((movie) => movie.movieId === movieId),
+      ]);
+    }
+  };
+
+  const fetchWatchList = async () => {
+    try {
+      const watchListItems = await watchList.getAll();
+      setWatchlist(watchListItems);
+    } catch (error) {
+      console.error("Error fetching watchlist:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const response = await genre.getAllGenresMovie();
-        setGenres(response || []);
-      } catch (error) {
-        console.error("Error fetching genres:", error);
+    if (currentUser) {
+      fetchWatchList();
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    try {
+      const loggedUserJSON = window.localStorage.getItem("loggedUser");
+      if (loggedUserJSON) {
+        const loggedInUser = JSON.parse(loggedUserJSON);
+        setCurrentUser(loggedInUser);
+        watchList.setToken(loggedInUser.token);
       }
-    };
-    fetchGenres();
+    } catch (error) {
+      console.error("Failed to retrieve logged in user:", error);
+    }
   }, []);
 
+  // Fetch movie, tv, and genre data
   useEffect(() => {
-    const fetchUpcomingMovies = async () => {
+    const fetchData = async () => {
       try {
-        const response = await getUpcomingMovie(page);
-        setUpcomingMovies(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-    fetchUpcomingMovies();
-  }, [page]);
+        // Fetching Movies
+        const trendingMoviesDayResponse =
+          await trendingMovie.getTrendingMovieByDay(page);
+        setTrendingMoviesDay(trendingMoviesDayResponse.results || []);
 
-  useEffect(() => {
-    const fetchNowPlayingMovies = async () => {
-      try {
-        const response = await getNowPlayingMovie(page);
-        setNowPlayingMovie(response.results || []);
-      } catch (error) {
-        console.error("Error fetching trending movies:", error);
-      }
-    };
-    fetchNowPlayingMovies();
-  }, [page]);
+        const trendingMoviesWeekResponse =
+          await trendingMovie.getTrendingMovieByWeek(page);
+        setTrendingMoviesWeek(trendingMoviesWeekResponse.results || []);
 
-  useEffect(() => {
-    const fetchTrendingMovies = async () => {
-      try {
-        const response = await trendingMovie.getTrendingMovieByDay(page);
+        const topRatedMoviesResponse = await getTopRatedMovie(page);
+        setTopRatedMovies(topRatedMoviesResponse.results || []);
 
-        setTrendingMovies(response.results);
-      } catch (error) {
-        console.error("Error fetching trending movies:", error);
-      }
-    };
+        const popularMoviesResponse = await getPopularMovie(page);
+        setPopularMovies(popularMoviesResponse.results || []);
 
-    fetchTrendingMovies();
-  }, [page]);
+        const nowPlayingMovieResponse = await getNowPlayingMovie(page);
+        setNowPlayingMovie(nowPlayingMovieResponse.results || []);
 
-  // Change movie banner every 5 seconds
-  useEffect(() => {
-    if (nowPlayingHeroMovies.length > 0) {
-      const interval = setInterval(() => {
-        const randomIndex = Math.floor(
-          Math.random() * nowPlayingHeroMovies.length
+        const upcomingMoviesResponse = await getUpcomingMovie(page);
+        setUpcomingMovies(upcomingMoviesResponse.results || []);
+
+        // Fetching TV Shows
+        const trendingTvShowsDayResponse = await trendingTv.getTrendingTvByDay(
+          page
         );
-        setMovie(nowPlayingHeroMovies[randomIndex]);
-      }, 5000);
+        setTrendingTvShowsDay(trendingTvShowsDayResponse.results || []);
 
-      return () => clearInterval(interval);
-    }
-  }, [nowPlayingHeroMovies]);
+        const trendingTvShowsWeekResponse =
+          await trendingTv.getTrendingTvByWeek(page);
+        setTrendingTvShowsWeek(trendingTvShowsWeekResponse.results || []);
 
-  useEffect(() => {
-    const fetchTopRatedMovies = async () => {
-      try {
-        const response = await getTopRatedMovie(page);
-        setTopRatedMovies(response.results || []);
+        const topRatedTvShowsResponse = await getTopRatedTv(page);
+        setTopRatedTvShows(topRatedTvShowsResponse.results || []);
+
+        const popularTvShowsResponse = await getPopularTv(page);
+        setPopularTvShows(popularTvShowsResponse.results || []);
+
+        const onAirTvShowsResponse = await getOnAirTv(page);
+        setOnAirTvShows(onAirTvShowsResponse.results || []);
+
+        // Fetching Genres
+        const genresResponse = await genre.getAllGenresMovie();
+        setGenres(genresResponse || []);
+
+        const tvGenresResponse = await genreTv.getAllGenresTv();
+        setTvGenres(tvGenresResponse || []);
+
+        // Fetching Persons
+        const popularPersonsResponse = await person.fetchPopularPersons(page);
+        setPersons(popularPersonsResponse.results || []);
       } catch (error) {
-        console.error("Error fetching top rated movies:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchTopRatedMovies();
+    fetchData();
   }, [page]);
 
-  useEffect(() => {
-    const fetchPopularMovies = async () => {
-      try {
-        const response = await getPopularMovie(page);
-        setPopularMovies(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchPopularMovies();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchPopularTvShows = async () => {
-      try {
-        const response = await getPopularTv(page);
-        setPopularTvShows(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchPopularTvShows();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchTopRatedTvShows = async () => {
-      try {
-        const response = await getTopRatedTv(page);
-        setTopRatedTvShows(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchTopRatedTvShows();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchOnAirTvShows = async () => {
-      try {
-        const response = await getOnAirTv(page);
-        setOnAirTvShows(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchOnAirTvShows();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchTrendingTvShows = async () => {
-      try {
-        const response = await trendingTv.getTrendingTvByDay(page);
-        setTrendingTvShows(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchTrendingTvShows();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchPopularPersons = async () => {
-      try {
-        const response = await person.fetchPopularPersons(page);
-        setPersons(response.results || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchPopularPersons();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchAllTvGenres = async () => {
-      try {
-        const response = await genreTv.getAllGenresTv();
-        setTvGenres(response || []);
-      } catch (error) {
-        console.error("Error fetching top rated movies:", error);
-      }
-    };
-
-    fetchAllTvGenres();
-  });
-
-  const handleAddToWatchlist = () => {
-    alert("Added to Watchlist!");
-  };
-
-  const handleWatchTrailer = (movie, type) => {
-    if (movie) {
-      window.open(
-        `https://www.youtube.com/results?search_query=${
-          type === "movie" ? movie.original_title : movie.original_name
-        } trailer`,
-        "_blank"
-      );
-    }
-  };
-
-  const handleNextPage = () => {
-    setPage(page + 1);
-  };
-
-  const handlePreviousPage = () => {
-    setPage(page - 1);
-  };
+  const handleNextPage = () => setPage(page + 1);
+  const handlePreviousPage = () => setPage(page - 1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-400 via-gray-100 to-gray-400 dark:from-gray-900 dark:via-gray-700 dark:to-gray-900 ">
-      <NavBar />
+    <div>
+      <NavBar currentUser={currentUser} handleLogout={handleLogout} />
 
-      <HeroSection
-        movie={movie}
-        loading={loading}
-        genres={genres}
-        onAddToWatchlist={handleAddToWatchlist}
-        onWatchTrailer={handleWatchTrailer}
-      />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              trendingMoviesDay={trendingMoviesDay}
+              trendingMoviesWeek={trendingMoviesWeek}
+              topRatedMovies={topRatedMovies}
+              popularMovies={popularMovies}
+              nowPlayingMovie={nowPlayingMovie}
+              upcomingMovies={upcomingMovies}
+              trendingTvShowsDay={trendingTvShowsDay}
+              trendingTvShowsWeek={trendingTvShowsWeek}
+              topRatedTvShows={topRatedTvShows}
+              popularTvShows={popularTvShows}
+              onAirTvShows={onAirTvShows}
+              persons={persons}
+              genres={genres}
+              tvGenres={tvGenres}
+              handleAddToWatchList={handleAddToWatchList}
+              currentUser={currentUser}
+            />
+          }
+        />
+        <Route
+          path="/signup"
+          element={<SignUpSection handleSignUp={handleSignUp} />}
+        />
+        <Route
+          path="/login"
+          element={<LoginSection handleLogin={handleLogin} />}
+        />
 
-      <Banner />
+        <Route
+          path="/watchlist"
+          element={
+            <WatchList
+              watchlist={watchlist}
+              onRemove={handleRemoveFromWatchList}
+            />
+          }
+        />
+      </Routes>
 
-      <HorizontalCards
-        Movies={trendingMovies}
-        title="Catch the latest buzz"
-        subText="Movies"
-        genres={genres}
-        onWatchTrailer={handleWatchTrailer}
-        type="movie"
-      />
-
-      <HorizontalCards
-        Movies={topRatedMovies}
-        title="Critics' Choice"
-        subText="Movies"
-        genres={genres}
-        onWatchTrailer={handleWatchTrailer}
-        type="movie"
-      />
-
-      <HorizontalCards
-        Movies={popularMovies}
-        title="What Everyone's Watching"
-        subText="Movies"
-        genres={genres}
-        onWatchTrailer={handleWatchTrailer}
-        type="movie"
-      />
-
-      <HorizontalCards
-        Movies={upcomingMovies}
-        title="Coming Soon"
-        subText="Movies"
-        genres={genres}
-        onWatchTrailer={handleWatchTrailer}
-        type="movie"
-      />
-
-      <HorizontalCards
-        Movies={nowPlayingMovie}
-        title="Now Playing"
-        subText="Movies"
-        genres={genres}
-        onWatchTrailer={handleWatchTrailer}
-        type="movie"
-      />
-
-      <HorizontalCards
-        Movies={topRatedTvShows}
-        title="Top Rated"
-        subText="TV Shows"
-        genres={tvGenres}
-        onWatchTrailer={handleWatchTrailer}
-        type="tv"
-      />
-
-      <HorizontalCards
-        Movies={popularTvShows}
-        title="Popular"
-        subText="TV Shows"
-        genres={tvGenres}
-        onWatchTrailer={handleWatchTrailer}
-        type="tv"
-      />
-
-      <HorizontalCards
-        Movies={trendingTvShows}
-        title="Trending"
-        subText="TV Shows"
-        genres={tvGenres}
-        onWatchTrailer={handleWatchTrailer}
-        type="tv"
-      />
-
-      <HorizontalCards
-        Movies={onAirTvShows}
-        title="On Air"
-        subText="TV Shows"
-        genres={tvGenres}
-        onWatchTrailer={handleWatchTrailer}
-        type="tv"
-      />
-
-      <PersonsScrollComponent people={persons} />
+      <Footer />
     </div>
   );
 };

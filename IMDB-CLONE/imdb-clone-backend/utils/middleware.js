@@ -26,38 +26,33 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
-const tokenExtractor = (request, response, next) => {
-  const authorization = request.get("authorization");
-  if (authorization && authorization.startsWith("Bearer")) {
-    request.token = authorization.replace("Bearer ", "");
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get("authorization");
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    req.token = authorization.substring(7);
   } else {
-    request.token = null;
+    req.token = null;
   }
   next();
 };
 
-const userExtractor = async (request, response, next) => {
-  try {
-    if (!request.token) {
-      return response.status(401).json({ error: "token missing or invalid" });
+const userExtractor = async (req, res, next) => {
+  if (req.token) {
+    try {
+      const decodedToken = jwt.verify(req.token, process.env.SECRET);
+      const user = await User.findById(decodedToken.id);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      req.user = user;
+      next();
+    } catch (error) {
+      return res.status(401).json({ error: "token invalid or expired" });
     }
-
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: "token invalid" });
-    }
-
-    const user = await User.findById(decodedToken.id);
-
-    if (!user) {
-      return response.status(404).json({ error: "user not found" });
-    }
-
-    request.user = user;
-    next();
-  } catch (error) {
-    next(error);
+  } else {
+    return res.status(401).json({ error: "token missing" });
   }
 };
 

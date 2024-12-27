@@ -32,4 +32,4 @@ const searchTvShows = async (query, page = 1) => {
   }
 };
 
-export { getTvById, searchTvShows };
+export default { getTvById, searchTvShows };

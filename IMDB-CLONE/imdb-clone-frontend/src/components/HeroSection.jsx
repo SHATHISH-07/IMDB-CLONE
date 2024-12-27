@@ -1,3 +1,4 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import "./css/HorizontalCards.css";
 
@@ -5,9 +6,29 @@ const HeroSection = ({
   movie,
   loading,
   genres,
-  onAddToWatchlist,
   onWatchTrailer,
+  handleAddToWatchList,
+  isLoggedIn,
 }) => {
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+  const handleAddToWatchListWithLoginCheck = (movie, type) => {
+    if (!isLoggedIn) {
+      setShowLoginPopup(true); // Show login popup if user is not logged in
+    } else {
+      handleAddToWatchList(movie, type); // Proceed with adding to watchlist if logged in
+    }
+  };
+
+  const handleCloseLoginPopup = () => {
+    setShowLoginPopup(false);
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+    setShowLoginPopup(false);
+  };
+
   const getGenreNames = (genreIds) => {
     if (!genres.length) return "Fetching genres...";
     return genreIds
@@ -37,7 +58,7 @@ const HeroSection = ({
               }}
             >
               {/* Overlay to darken background for text readability */}
-              <div className="absolute inset-0 bg-black opacity-40"></div>
+              <div className="absolute inset-0 bg-black opacity-10"></div>
               <div className="relative z-10 h-[4rem] flex items-center justify-center text-white bg-black bg-opacity-50 text-xl w-full text-center p-2 rounded-b-lg">
                 {movie.original_title || "Unknown Title"}
               </div>
@@ -45,9 +66,9 @@ const HeroSection = ({
 
             <div className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white p-6 rounded-lg w-full hidden lg:block md:w-[30%] shadow-lg hover:shadow-xl transition-shadow duration-300">
               <h2 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white">
-                Now In Theater
+                Catching on
               </h2>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-100">
+              <h3 className="text-2xl font-semibold mb-3 text-gray-800 dark:text-gray-100">
                 {movie.original_title || "Unknown Title"}
               </h3>
               <p
@@ -65,20 +86,22 @@ const HeroSection = ({
               <div className="flex items-center mb-4">
                 <i className="fa-solid fa-star text-xl text-yellow-400 mr-2"></i>
                 <span className="text-lg font-semibold">
-                  {movie.vote_average || "N/A"}
+                  {movie.vote_average.toFixed(1) || "N/A"}
                 </span>
               </div>
               <div className="flex flex-col gap-4 mt-4">
                 <button
+                  onClick={() =>
+                    handleAddToWatchListWithLoginCheck(movie, "movie")
+                  }
                   className="px-4 py-2 text-blue-500 rounded-lg hover:text-blue-600 bg-gray-300 transition transform hover:scale-105 shadow-md"
-                  onClick={onAddToWatchlist}
                 >
                   <i className="fa-solid fa-bookmark text-lg"></i> Add to
                   Watchlist
                 </button>
                 <button
                   className="px-4 py-2 text-red-500 rounded-lg hover:text-red-600 bg-gray-300  transition transform hover:scale-105 shadow-md"
-                  onClick={() => onWatchTrailer(movie)}
+                  onClick={() => onWatchTrailer(movie, "movie")}
                 >
                   <i className="fa-solid fa-play-circle text-xl"></i> Watch
                   Trailer
@@ -94,6 +117,29 @@ const HeroSection = ({
           </div>
         )}
       </div>
+      {showLoginPopup && (
+        <div className="fixed inset-0 bg-gray-600 dark:bg-gray-900 dark:bg-opacity-50 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[80%] max-w-[400px] text-center">
+            <p className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+              Please login to access the Watchlist
+            </p>
+            <div className="flex place-items-start mt-4 ml-5">
+              <button
+                onClick={handleCloseLoginPopup}
+                className="text-red-500  px-4 mr-2 py-2 rounded-lg hover:bg-gray-300 transition-all"
+              >
+                Close
+              </button>
+              <button
+                onClick={handleLoginClick}
+                className="text-blue-500  px-4 py-2 rounded-lg hover:bg-gray-300 transition-all"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -102,8 +148,8 @@ HeroSection.propTypes = {
   movie: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   genres: PropTypes.array.isRequired,
-  onAddToWatchlist: PropTypes.func.isRequired,
   onWatchTrailer: PropTypes.func.isRequired,
+  handleAddToWatchList: PropTypes.func.isRequired,
 };
 
 export default HeroSection;

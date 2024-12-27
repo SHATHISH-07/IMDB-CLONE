@@ -1,38 +1,43 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import DarkModeToggle from "./DarkModeToggle";
-import MenuBarContent from "./MenuBarContent";
-import { searchMovies } from "../services/movies/movieSearch";
-import { searchTvShows } from "../services/tvShows/searchTv";
 import DropDown from "./DropDown";
+import MenuBarContent from "./MenuBarContent";
+import movieSearch from "../services/movies/movieSearch";
+import searchTv from "../services/tvShows/searchTv";
 
-const NavBar = () => {
+const NavBar = ({ currentUser, handleLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [selectedOption, setSelectedOption] = useState("movie");
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State to control the logout popup visibility
+  const [showLoginPopup, setShowLoginPopup] = useState(false); // State for "Please login" popup
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!searchInput) {
-      setSearchResult([]); // Clear results immediately when input is empty
-      return;
-    }
-
-    const fetchData = async () => {
+    const fetchSearchResults = async () => {
       try {
-        let response;
-        if (selectedOption === "movie") {
-          response = await searchMovies(searchInput);
-        } else {
-          response = await searchTvShows(searchInput);
+        if (searchInput.trim() === "") {
+          setSearchResult([]);
+          return;
         }
-        setSearchResult(response.results.slice(0, 5));
+
+        let response;
+
+        if (selectedOption === "movie") {
+          response = await movieSearch.searchMovies(searchInput);
+        } else {
+          response = await searchTv.searchTvShows(searchInput);
+        }
+
+        setSearchResult(response.results.slice(0, 5) || []);
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
     };
 
-    const debounce = setTimeout(() => fetchData(), 300); // Increase debounce time to avoid too frequent calls
-    return () => clearTimeout(debounce);
+    fetchSearchResults();
   }, [searchInput, selectedOption]);
 
   const toggleMenu = () => {
@@ -43,12 +48,52 @@ const NavBar = () => {
     setSearchInput(e.target.value);
   };
 
+  // Function to show the logout confirmation popup
+  const handleUsernameClick = () => {
+    setShowLogoutPopup(true);
+  };
+
+  // Function to confirm logout
+  const handleConfirmLogout = () => {
+    setShowLogoutPopup(false);
+    handleLogout();
+  };
+
+  // Function to cancel logout
+  const handleCancelLogout = () => {
+    setShowLogoutPopup(false);
+  };
+
+  const handleNavigateToWatchList = () => {
+    if (currentUser) {
+      navigate("/watchlist");
+    } else {
+      setShowLoginPopup(true); // Show "Please login" popup
+    }
+  };
+
+  // Function to close the login popup
+  const handleCloseLoginPopup = () => {
+    setShowLoginPopup(false);
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+    setShowLoginPopup(false); // Show the login popup
+  };
+
+  const handleNavigateHome = () => {
+    navigate("/");
+  };
+
   return (
     <>
       {/* Search Results */}
       <div
-        className={`search-results absolute  top-16 left-0 right-0 z-20 bg-white dark:text-white dark:bg-black rounded-md shadow-md md:w-2/3 w-11/12 mx-auto mt-11 md:mt-3  ${
-          searchResult.length > 0 ? "block" : "hidden"
+        className={`search-results  absolute top-16 left-0 right-0 z-20 bg-white dark:text-white dark:bg-black rounded-md shadow-md md:w-2/3 w-11/12 mx-auto mt-11 md:mt-3 ${
+          searchInput.trim() === "" || searchResult.length === 0
+            ? "hidden"
+            : "block"
         }`}
       >
         {searchResult.length > 0 ? (
@@ -94,7 +139,7 @@ const NavBar = () => {
       </div>
 
       {/* Navigation Bar */}
-      <nav className="navbar p-2 flex items-center justify-between bg-white text-black dark:bg-customBlack dark:text-white">
+      <nav className="navbar  p-2 flex items-center justify-between border-gray-500 border-b-2 bg-white text-black dark:bg-customBlack dark:text-white">
         <div>
           <button
             onClick={toggleMenu}
@@ -110,6 +155,7 @@ const NavBar = () => {
           <button
             className="px-4 py-2 rounded-lg text-black hover:text-white hover:bg-gray-600 dark:text-white dark:hover:bg-gray-600"
             aria-label="Home"
+            onClick={handleNavigateHome}
           >
             <i className="fa-solid fa-house"></i> Home
           </button>
@@ -127,13 +173,13 @@ const NavBar = () => {
         <div className="searchBar flex flex-col md:flex-row w-full md:w-[50%] space-y-2 md:space-y-0 md:space-x-2">
           <input
             type="text"
-            placeholder="Search for movies"
+            placeholder="Search for movies or TV shows"
             className="px-4 py-2 rounded-md w-full bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
             onChange={handleSearch}
-            aria-label="Search Movies"
+            aria-label="Search Movies or TV Shows"
           />
           <button
-            className="px-4 py-2 bg-gray-600  text-white rounded-md"
+            className="px-4 py-2 bg-gray-600 text-white rounded-md"
             aria-label="Search Button"
           >
             <i className="fa fa-search"></i>
@@ -143,17 +189,49 @@ const NavBar = () => {
         {/* Right-Side Buttons */}
         <div className="hidden md:flex items-center space-x-4">
           <button
-            className="px-4 py-2 rounded-lg  text-black hover:bg-gray-600 hover:text-white dark:text-white dark:hover:bg-gray-600"
+            className="px-4 py-2 rounded-lg text-black hover:bg-gray-600 hover:text-white dark:text-white dark:hover:bg-gray-600"
             aria-label="Watchlist"
+            onClick={handleNavigateToWatchList}
           >
             <i className="fa-solid fa-bookmark"></i> Watchlist
           </button>
-          <button
-            className="px-4 py-2 text-black rounded-lg hover:bg-gray-600 hover:text-white dark:text-white dark:hover:bg-gray-600"
-            aria-label="Sign In"
-          >
-            <i className="fa-solid fa-user"></i> Sign In
-          </button>
+          {currentUser ? (
+            <div className="relative">
+              <button
+                className="px-4 py-2 bg-gray-600 text-white rounded-full dark:hover:bg-gray-600"
+                aria-label="User Profile"
+                onClick={handleUsernameClick} // Show the logout popup when clicked
+              >
+                {currentUser.username[0].toUpperCase()}
+              </button>
+
+              {/* Logout Confirmation Popup */}
+              {showLogoutPopup && (
+                <div className="absolute top-12 right-[-20px] bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-md shadow-lg p-4 z-30">
+                  <p
+                    className="cursor-pointer border-b-2 border-gray-300 pb-2  text-red-600 hover:text-red-800 dark:hover:text-red-400 font-semibold mb-2"
+                    onClick={handleConfirmLogout}
+                  >
+                    Logout
+                  </p>
+                  <p
+                    className="cursor-pointer text-gray-600  hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 font-semibold"
+                    onClick={handleCancelLogout}
+                  >
+                    Cancel
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              className="px-4 py-2 text-black rounded-lg hover:bg-gray-600 hover:text-white dark:text-white dark:hover:bg-gray-600"
+              aria-label="Sign In"
+              onClick={handleLoginClick}
+            >
+              <i className="fa-solid fa-user"></i> Login
+            </button>
+          )}
         </div>
 
         <div>
@@ -161,8 +239,35 @@ const NavBar = () => {
         </div>
 
         {/* Full-Screen Menu Overlay */}
-        <MenuBarContent isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        <MenuBarContent
+          isMenuOpen={isMenuOpen}
+          toggleMenu={toggleMenu}
+          currentUser={currentUser}
+          handleLogout={handleLogout}
+        />
       </nav>
+
+      {showLoginPopup && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-600 dark:text-white dark:bg-gray-900 dark:bg-opacity-50  bg-opacity-60 flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-gray-900  p-6 rounded-md shadow-lg">
+            <p className="text-xl font-semibold mb-4">
+              Please login to access the Watchlist
+            </p>
+            <button
+              onClick={handleCloseLoginPopup}
+              className="px-4 py-2 text-red-600 hover:bg-gray-300 rounded-md"
+            >
+              Close
+            </button>
+            <button
+              onClick={handleLoginClick}
+              className="ml-4 px-4 py-2 text-blue-600 hover:bg-gray-300 rounded-md"
+            >
+              login
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

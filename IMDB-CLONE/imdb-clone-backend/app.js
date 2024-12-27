@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use(
-  "/api/movie/watchList",
+  "/api/watchList",
   middleware.tokenExtractor,
   middleware.userExtractor,
   watchListRouter

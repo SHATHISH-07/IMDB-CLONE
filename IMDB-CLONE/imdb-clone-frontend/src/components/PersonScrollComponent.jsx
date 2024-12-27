@@ -50,7 +50,7 @@ const PersonsScrollComponent = ({ people }) => {
   };
 
   return (
-    <div className="px-6 py-10 w-full text-black dark:text-white">
+    <div className="px-2 py-10 w-full text-black dark:text-white">
       {/* Title Section */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -62,6 +62,12 @@ const PersonsScrollComponent = ({ people }) => {
             {" "}
             Discover profiles of trending individuals.
           </p>
+          <button
+            onClick={() => handleScroll("forward")}
+            className="block md:hidden bg-gray-800 text-white py-2 px-6 mt-3 rounded-lg hover:bg-gray-700 shadow-lg transition-all"
+          >
+            View All
+          </button>
         </div>
         <button
           onClick={() => handleScroll("forward")}
@@ -97,7 +103,7 @@ const PersonsScrollComponent = ({ people }) => {
                 </h3>
                 <button
                   onClick={() => handleShowPopup(person)}
-                  className="text-gray-700 dark:text-gray-400 hover:text-blue-500 transition-all mt-1"
+                  className="text-gray-700 dark:text-gray-400 group-hover:text-blue-500 transition-all mt-1"
                 >
                   <i className="fa-solid fa-info-circle text-lg"></i>
                 </button>
@@ -109,17 +115,15 @@ const PersonsScrollComponent = ({ people }) => {
         {/* Navigation Buttons */}
         <button
           onClick={() => handleScroll("backward")}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700 transition-all tooltip"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white  border-2  p-5 shadow-lg hover:bg-opacity-70 bg-opacity-50 transition-all rounded-md"
         >
-          <i className="fa-solid fa-chevron-left"></i>
-          <span className="tooltip-text"></span>
+          <i className="fa-solid fa-chevron-left text-2xl"></i>
         </button>
         <button
           onClick={() => handleScroll("forward")}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700 transition-all tooltip"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white border-2  p-5 shadow-lg bg-opacity-50 rounded-md hover:bg-opacity-70 transition-all"
         >
-          <i className="fa-solid fa-chevron-right"></i>
-          <span className="tooltip-text"></span>
+          <i className="fa-solid fa-chevron-right text-2xl"></i>
         </button>
       </div>
 

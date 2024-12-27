@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HorizontalCards = ({
   Movies,
@@ -7,12 +8,17 @@ const HorizontalCards = ({
   onWatchTrailer,
   genres,
   type,
+  handleAddToWatchList,
+  isLoggedIn, // Add this prop to check if the user is logged in
 }) => {
   const containerRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showLoginPopup, setShowLoginPopup] = useState(false); // State for login popup
   const popupRef = useRef(null);
   const ignoreClick = useRef(false); // Prevent immediate closing
+
+  const navigate = useNavigate();
 
   const getGenreNames = (genreIds) => {
     if (!genres.length) return "Fetching genres...";
@@ -25,7 +31,6 @@ const HorizontalCards = ({
   };
 
   const handleShowPopup = (movie) => {
-    console.log("Opening popup for movie:", movie);
     if (!movie) {
       console.error("Movie object is undefined or null.");
       return;
@@ -34,22 +39,18 @@ const HorizontalCards = ({
     setShowPopup(true);
     ignoreClick.current = true; // Ignore the click that triggered the popup
     setTimeout(() => (ignoreClick.current = false), 100); // Allow clicks after a short delay
-    console.log("Popup state set to true. Selected movie:", movie);
   };
 
   const handleClosePopup = () => {
-    console.log("Closing popup");
     setShowPopup(false);
     setSelectedMovie(null);
   };
 
   const handleClickOutside = (e) => {
     if (ignoreClick.current) {
-      console.log("Ignoring initial click.");
       return;
     }
     if (popupRef.current && !popupRef.current.contains(e.target)) {
-      console.log("Detected click outside the popup.");
       handleClosePopup();
     }
   };
@@ -78,8 +79,25 @@ const HorizontalCards = ({
     }
   };
 
+  const handleAddToWatchListWithLoginCheck = (movie, type) => {
+    if (!isLoggedIn) {
+      setShowLoginPopup(true); // Show login popup if user is not logged in
+    } else {
+      handleAddToWatchList(movie, type); // Proceed with adding to watchlist if logged in
+    }
+  };
+
+  const handleCloseLoginPopup = () => {
+    setShowLoginPopup(false);
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+    setShowLoginPopup(false);
+  };
+
   return (
-    <div className="px-6 py-10 w-full text-black dark:text-white">
+    <div className="px-2 py-10 w-full text-black dark:text-white">
       {/* Title Section */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -88,6 +106,12 @@ const HorizontalCards = ({
             {title}
           </h1>
           <p className="text-gray-700 dark:text-gray-400 text-lg">{subText}</p>
+          <button
+            onClick={() => handleScroll("forward")}
+            className="block md:hidden bg-gray-800 text-white py-2 px-4 mt-3 rounded-lg hover:bg-gray-700 shadow-lg transition-all"
+          >
+            View All
+          </button>
         </div>
         <button
           onClick={() => handleScroll("forward")}
@@ -117,22 +141,25 @@ const HorizontalCards = ({
               ></div>
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent group-hover:from-gray-900 transition-all"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent hover:from-black hover:via-transparent hover:to-transparent transition-all"></div>
 
               {/* Bookmark Icon */}
-              <div className="absolute top-0 right-0 bg-transparent cursor-pointer rounded-full  opacity-90 hover:opacity-100 transition-all hover:scale-125">
-                <i className="fa-solid fa-bookmark text-black text-5xl"></i>
-                <i className="fa-solid fa-plus absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm"></i>
+              <div
+                onClick={() => handleAddToWatchListWithLoginCheck(movie, type)}
+                className="absolute top-0 left-0 bg-transparent cursor-pointer rounded-full opacity-60 hover:opacity-100"
+              >
+                <i className="fa-solid fa-bookmark text-black text-[60px] border-x-4 border-gray-300"></i>
+                <i className="fa-solid fa-plus absolute top-4 left-5 text-white text-lg"></i>
               </div>
 
               {/* Content */}
-              <div className="absolute bottom-4 left-4 right-4 z-10">
+              <div className="absolute bottom-2 left-4 right-4 z-10">
                 <h3 className="text-lg font-bold text-white truncate">
                   {type === "movie"
                     ? movie.original_title
                     : movie.original_name || "Unknown Title"}
                 </h3>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-md text-white mt-1">
                   <i className="fa-solid fa-star text-yellow-400"></i>{" "}
                   {movie.vote_average.toFixed(1) || "N/A"}
                 </p>
@@ -160,21 +187,21 @@ const HorizontalCards = ({
         {/* Navigation Buttons */}
         <button
           onClick={() => handleScroll("backward")}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700 transition-all"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white border-2 p-5 shadow-lg hover:bg-opacity-70 bg-opacity-50 transition-all rounded-md"
         >
-          <i className="fa-solid fa-chevron-left"></i>
+          <i className="fa-solid fa-chevron-left text-2xl"></i>
         </button>
         <button
           onClick={() => handleScroll("forward")}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700 transition-all"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white border-2 p-5 shadow-lg bg-opacity-50 rounded-md hover:bg-opacity-70 transition-all"
         >
-          <i className="fa-solid fa-chevron-right"></i>
+          <i className="fa-solid fa-chevron-right text-2xl"></i>
         </button>
       </div>
 
       {/* Popup */}
       {showPopup && (
-        <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
             ref={popupRef}
             className="bg-white dark:bg-gray-900 p-6 rounded-lg w-[80%] max-w-[800px] relative flex flex-col sm:flex-row"
@@ -224,7 +251,12 @@ const HorizontalCards = ({
 
               {/* Buttons at the bottom */}
               <div className="mt-6 flex gap-4">
-                <button className="  text-blue-600 bg-gray-200 py-2 px-6 rounded-lg hover:bg-gray-300 transition-all">
+                <button
+                  onClick={() =>
+                    handleAddToWatchListWithLoginCheck(selectedMovie, type)
+                  }
+                  className="text-blue-600 bg-gray-200 py-2 px-6 rounded-lg hover:bg-gray-300 transition-all"
+                >
                   <i className="fa-solid fa-plus mr-2"></i> Add to Watchlist
                 </button>
                 <button
@@ -234,6 +266,31 @@ const HorizontalCards = ({
                   <i className="fa-solid fa-play-circle mr-2"></i> Watch Trailer
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login Popup */}
+      {showLoginPopup && (
+        <div className="fixed inset-0 bg-gray-600 dark:bg-gray-900 dark:bg-opacity-50 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[80%] max-w-[400px] text-center">
+            <p className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+              Please login to access the Watchlist
+            </p>
+            <div className="flex place-items-start mt-4 ml-5">
+              <button
+                onClick={handleCloseLoginPopup}
+                className="text-red-500  px-4 mr-2 py-2 rounded-lg hover:bg-gray-300 transition-all"
+              >
+                Close
+              </button>
+              <button
+                onClick={handleLoginClick}
+                className="text-blue-500  px-4 py-2 rounded-lg hover:bg-gray-300 transition-all"
+              >
+                Login
+              </button>
             </div>
           </div>
         </div>

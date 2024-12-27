@@ -32,4 +32,4 @@ const searchMovies = async (query, page = 1) => {
   }
 };
 
-export { getMovieById, searchMovies };
+export default { getMovieById, searchMovies };
