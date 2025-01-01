@@ -15,9 +15,9 @@ const HorizontalCards = ({
   const containerRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [showLoginPopup, setShowLoginPopup] = useState(false); // State for login popup
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const popupRef = useRef(null);
-  const ignoreClick = useRef(false); // Prevent immediate closing
+  const ignoreClick = useRef(false);
 
   const navigate = useNavigate();
 
@@ -38,8 +38,8 @@ const HorizontalCards = ({
     }
     setSelectedMovie(movie);
     setShowPopup(true);
-    ignoreClick.current = true; // Ignore the click that triggered the popup
-    setTimeout(() => (ignoreClick.current = false), 100); // Allow clicks after a short delay
+    ignoreClick.current = true;
+    setTimeout(() => (ignoreClick.current = false), 100);
   };
 
   const handleClosePopup = () => {
@@ -82,9 +82,9 @@ const HorizontalCards = ({
 
   const handleAddToWatchListWithLoginCheck = (movie, type) => {
     if (!isLoggedIn) {
-      setShowLoginPopup(true); // Show login popup if user is not logged in
+      setShowLoginPopup(true);
     } else {
-      handleAddToWatchList(movie, type); // Proceed with adding to watchlist if logged in
+      handleAddToWatchList(movie, type);
     }
   };
 

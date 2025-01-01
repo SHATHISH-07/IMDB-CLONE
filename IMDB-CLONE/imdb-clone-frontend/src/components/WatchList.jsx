@@ -1,9 +1,8 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 
 const WatchList = ({ watchlist, onRemove }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Memoize filtered watchlist
   const filteredWatchlist = useMemo(
     () =>
       watchlist.filter((movie) =>

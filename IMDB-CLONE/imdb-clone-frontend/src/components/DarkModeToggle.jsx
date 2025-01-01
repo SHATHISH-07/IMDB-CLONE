@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 const DarkModeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Check local storage for dark mode preference
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode");
     if (savedMode === "true") {

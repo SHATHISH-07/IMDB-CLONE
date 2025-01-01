@@ -6,13 +6,13 @@ const PersonsScrollComponent = ({ people }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const popupRef = useRef(null);
-  const ignoreClick = useRef(false); // Prevent immediate closing
+  const ignoreClick = useRef(false);
 
   const handleShowPopup = (person) => {
     setSelectedPerson(person);
     setShowPopup(true);
-    ignoreClick.current = true; // Ignore the click that triggered the popup
-    setTimeout(() => (ignoreClick.current = false), 100); // Allow clicks after a short delay
+    ignoreClick.current = true;
+    setTimeout(() => (ignoreClick.current = false), 100);
   };
 
   const handleClosePopup = () => {

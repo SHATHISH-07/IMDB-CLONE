@@ -139,7 +139,7 @@ const IndividualCardDetails = ({
       <div className="flex justify-center items-center h-screen">
         <div className="spinner-border animate-spin border-4 border-t-4 border-blue-500 rounded-full w-16 h-16"></div>
       </div>
-    ); // Show loading spinner while data is being loaded
+    );
   }
 
   return (
@@ -149,7 +149,7 @@ const IndividualCardDetails = ({
     >
       {/* Login Popup */}
       {showLoginPopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black  bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50">
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50">
           <div className="bg-white dark:bg-gray-900 dark:text-white p-5 rounded-lg shadow-lg w-[90%] max-w-md">
             <h2 className="text-xl font-bold mb-4">Login Required</h2>
             <p className="mb-4">
@@ -158,17 +158,16 @@ const IndividualCardDetails = ({
             <div className="flex gap-4">
               <button
                 onClick={closeLoginPopup}
-                className="px-4 py-2  text-red-500 rounded-md hover:bg-gray-300"
+                className="px-4 py-2 text-red-500 rounded-md hover:bg-gray-300"
               >
                 Cancel
               </button>
               <button
                 onClick={() => {
                   closeLoginPopup();
-                  // Redirect to login page or show login modal
-                  window.location.href = "/login"; // Replace with your login route
+                  window.location.href = "/login";
                 }}
-                className="px-4 py-2 text-blue-500  rounded-md hover:bg-gray-300"
+                className="px-4 py-2 text-blue-500 rounded-md hover:bg-gray-300"
               >
                 Login
               </button>
@@ -177,12 +176,12 @@ const IndividualCardDetails = ({
         </div>
       )}
 
-      <div className="flex justify-between dark:text-white p-5">
-        <div>
-          <h1 className="text-4xl">
+      <div className="flex flex-col lg:flex-row justify-between dark:text-white p-5">
+        <div className="flex-1">
+          <h1 className="text-2xl md:text-4xl">
             {detailedShowCard.original_title || detailedShowCard.original_name}
           </h1>
-          <div className="flex gap-x-5 mt-2 text-lg">
+          <div className="flex flex-wrap gap-x-5 mt-2 text-sm md:text-lg">
             <p>
               {detailedShowCard.release_date || detailedShowCard.first_air_date}
             </p>
@@ -199,24 +198,25 @@ const IndividualCardDetails = ({
           </div>
         </div>
 
-        <div className="flex gap-x-10 pt-2">
+        <div className="flex gap-x-5 md:gap-x-10 pt-5 lg:pt-2">
           <div>
             <p>RATING</p>
-            <h2 className="text-2xl">
+            <h2 className="text-xl md:text-2xl">
               <i className="fa-solid fa-star text-yellow-400"></i>{" "}
               {detailedShowCard.vote_average.toFixed(1)}/10
             </h2>
           </div>
           <div>
             <p>POPULARITY</p>
-            <h2 className="text-2xl">
-              <i className="fas fa-heart text-red-500 "></i>{" "}
+            <h2 className="text-xl md:text-2xl">
+              <i className="fas fa-heart text-red-500"></i>{" "}
               {detailedShowCard.popularity.toFixed(1)}
             </h2>
           </div>
         </div>
       </div>
-      <div className="flex px-5 h-[65vh]">
+
+      <div className="flex flex-col lg:flex-row px-5 h-auto lg:h-[65vh] gap-4 overflow-x-hidden">
         <div
           id="poster"
           style={{
@@ -226,23 +226,23 @@ const IndividualCardDetails = ({
                 : ""
             })`,
           }}
-          className="w-[25%] h-full bg-center bg-cover mr-1 rounded-r-2xl rounded-b-2xl"
+          className="w-full lg:w-[25%] h-60 lg:h-full bg-center bg-cover rounded-2xl relative max-w-full"
         >
           <div
             onClick={() =>
               handleAddToWatchListWithLoginCheck(detailedShowCard, type)
             }
-            className="absolute  top-[190px] left-[20px] bg-transparent cursor-pointer rounded-full opacity-60 hover:opacity-100"
+            className="absolute top-0 left-0 bg-transparent cursor-pointer rounded-full opacity-60 hover:opacity-100"
           >
-            <i className="fa-solid fa-bookmark text-black text-[60px] border-x-4 border-gray-300"></i>
-            <i className="fa-solid fa-plus absolute top-4 left-5 text-white text-lg"></i>
+            <i className="fa-solid fa-bookmark text-black text-6xl lg:text-[60px] border-x-4 border-gray-300"></i>
+            <i className="fa-solid fa-plus absolute top-3 lg:top-4 left-5 lg:left-5 text-white text-lg lg:text-lg"></i>
           </div>
         </div>
 
         {/* Video Section */}
         <div
           id="video"
-          className="w-[60%] h-full  bg-black text-white mr-1 rounded-2xl flex justify-center items-center"
+          className="w-full lg:w-[60%] h-60 lg:h-full bg-black text-white rounded-2xl flex justify-center items-center relative max-w-full"
         >
           {isVideoLoading && (
             <div className="absolute flex justify-center items-center w-full h-full">
@@ -266,23 +266,23 @@ const IndividualCardDetails = ({
           )}
         </div>
 
-        {/* image and video count*/}
-        <div className="w-[15%] h-full flex flex-col gap-1 ">
+        {/* Image and Video Count */}
+        <div className="w-full lg:w-[15%] h-40 lg:h-full flex lg:flex-col gap-2 lg:gap-1">
           <a href="#videoScroll" className="flex-1 scroll-smooth">
             <div
               id="video"
-              className="flex flex-col justify-center items-center w-full h-full  bg-black bg-opacity-70 text-white rounded-2xl "
+              className="flex flex-col justify-center items-center w-full h-full bg-black bg-opacity-70 text-white rounded-2xl"
             >
-              <i className="fa-solid fa-play text-4xl p-2"></i>
+              <i className="fa-solid fa-play text-2xl lg:text-4xl p-2"></i>
               {videos.length} VIDEOS
             </div>
           </a>
           <a href="#imageScroll" className="flex-1 scroll-smooth">
             <div
               id="image"
-              className="flex flex-col justify-center items-center w-full h-full  bg-black bg-opacity-70 text-white rounded-2xl "
+              className="flex flex-col justify-center items-center w-full h-full bg-black bg-opacity-70 text-white rounded-2xl"
             >
-              <i className="fa-solid fa-images text-4xl p-2"></i>
+              <i className="fa-solid fa-images text-2xl lg:text-4xl p-2"></i>
               {images.length} IMAGES
             </div>
           </a>
@@ -303,30 +303,29 @@ const IndividualCardDetails = ({
         </div>
       )}
 
-      <div className="flex ml-5 mt-5 mb-20 dark:text-white ">
-        {detailedShowCard.genres.map((genre) => {
-          return (
-            <p
-              key={genre.id}
-              className="px-7 py-1 mr-3 rounded-full border-2 border-black dark:border-gray-300"
-            >
-              {genre.name}
-            </p>
-          );
-        })}
+      <div className="flex flex-wrap ml-5 mt-5 mb-20 dark:text-white gap-3">
+        {detailedShowCard.genres.map((genre) => (
+          <p
+            key={genre.id}
+            className="px-5 md:px-7 py-1 rounded-full border-2 border-black dark:border-gray-300 text-sm md:text-base"
+          >
+            {genre.name}
+          </p>
+        ))}
       </div>
+
       <div className="mt-4 ml-2 dark:text-white">
         <h3 className="text-4xl font-bold mb-2 flex items-center">
           <i className="fa-solid fa-film text-4xl mr-2"></i> Overview
         </h3>
         <p className="text-lg">Plot Summary of the show</p>
       </div>
+
       <MediaCard
         mediaDetails={detailedShowCard}
         collections={collections}
         handleAddToWatchListWithLoginCheck={handleAddToWatchListWithLoginCheck}
         currentUser={currentUser}
-        type={type}
       />
 
       <CastSection cast={cast} text="Cast" subtext="The stars of the show" />
@@ -474,7 +473,7 @@ const IndividualCardDetails = ({
             </div>
 
             {/* Review Content */}
-            <div className="flex flex-col md:flex-row md:items-center gap-5 w-full ">
+            <div className="flex  flex-col md:flex-row md:items-center gap-5 w-full ">
               <div className="mt-3 md:mt-0 text-gray-800 dark:text-gray-300">
                 {review.content}
               </div>

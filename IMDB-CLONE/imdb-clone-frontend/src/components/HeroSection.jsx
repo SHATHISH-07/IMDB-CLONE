@@ -15,9 +15,9 @@ const HeroSection = ({
 
   const handleAddToWatchListWithLoginCheck = (movie, type) => {
     if (!isLoggedIn) {
-      setShowLoginPopup(true); // Show login popup if user is not logged in
+      setShowLoginPopup(true);
     } else {
-      handleAddToWatchList(movie, type); // Proceed with adding to watchlist if logged in
+      handleAddToWatchList(movie, type);
     }
   };
 

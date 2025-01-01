@@ -8,8 +8,8 @@ const DropDown = ({ selectedOption, setSelectedOption }) => {
   };
 
   const handleSelect = (option) => {
-    setSelectedOption(option.toLowerCase()); // Normalize to lowercase
-    setIsOpen(false); // Close the dropdown
+    setSelectedOption(option.toLowerCase());
+    setIsOpen(false);
   };
 
   return (

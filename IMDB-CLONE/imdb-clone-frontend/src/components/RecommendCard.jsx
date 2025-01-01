@@ -13,43 +13,36 @@ const RecommendCard = ({
   const containerRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [movieData, setMovieData] = useState([]); // Initialize movie as an empty array
-  const [storedType, setStoredType] = useState(""); // Store type state
+  const [movieData, setMovieData] = useState([]);
+  const [storedType, setStoredType] = useState("");
   const navigate = useNavigate();
 
-  // Log storedType to see if it's being set correctly
-  console.log(storedType);
-
-  // Store movies in local storage when the component mounts or when movies/type change
   useEffect(() => {
-    // If `movies` prop changes, update the state and localStorage
     if (movies && movies.length > 0) {
-      setMovieData(movies); // Use the provided movies prop
-      localStorage.setItem("movies", JSON.stringify(movies)); // Store movies in local storage
+      setMovieData(movies);
+      localStorage.setItem("movies", JSON.stringify(movies));
     }
-  }, [movies]); // Re-run when `movies` prop changes
+  }, [movies]);
 
-  // Store the type in localStorage when `type` prop changes
   useEffect(() => {
     if (type) {
-      setStoredType(type); // Set the stored type
-      localStorage.setItem("type", type); // Store the type in localStorage
+      setStoredType(type);
+      localStorage.setItem("type", type);
     }
-  }, [type]); // Re-run when `type` prop changes
+  }, [type]);
 
-  // Retrieve movie data from localStorage on initial render
   useEffect(() => {
     const storedMovies = localStorage.getItem("movies");
     const storedType = localStorage.getItem("type");
 
     if (storedMovies) {
-      setMovieData(JSON.parse(storedMovies)); // Load from local storage if available
+      setMovieData(JSON.parse(storedMovies));
     }
 
     if (storedType) {
-      setStoredType(storedType); // Load the stored type from localStorage
+      setStoredType(storedType);
     }
-  }, []); // Run only once on initial render
+  }, []);
 
   const getGenreNames = (genreIds) => {
     if (!genres.length) return "Fetching genres...";
@@ -82,11 +75,11 @@ const RecommendCard = ({
   };
 
   const handleSetMovieIdClick = (movieId) => {
-    handleSetMovieId(movieId, storedType); // Use the stored type here
+    handleSetMovieId(movieId, storedType);
   };
 
   const handleWatchTrailerClick = (movie) => {
-    onWatchTrailer(movie, storedType); // Use the stored type here
+    onWatchTrailer(movie, storedType);
   };
 
   return (

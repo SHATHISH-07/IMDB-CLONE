@@ -5,18 +5,15 @@ import DropDown from "./DropDown";
 import MenuBarContent from "./MenuBarContent";
 import movieSearch from "../services/movies/movieSearch";
 import searchTv from "../services/tvShows/searchTv";
-import login from "../services/login";
 
 const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [selectedOption, setSelectedOption] = useState("movie");
-  const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State to control the logout popup visibility
-  const [showLoginPopup, setShowLoginPopup] = useState(false); // State for "Please login" popup
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const navigate = useNavigate();
-
-  console.log(selectedOption);
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -51,18 +48,15 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
     setSearchInput(e.target.value);
   };
 
-  // Function to show the logout confirmation popup
   const handleUsernameClick = () => {
     setShowLogoutPopup(true);
   };
 
-  // Function to confirm logout
   const handleConfirmLogout = () => {
     setShowLogoutPopup(false);
     handleLogout();
   };
 
-  // Function to cancel logout
   const handleCancelLogout = () => {
     setShowLogoutPopup(false);
   };
@@ -71,18 +65,17 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
     if (currentUser) {
       navigate("/watchlist");
     } else {
-      setShowLoginPopup(true); // Show "Please login" popup
+      setShowLoginPopup(true);
     }
   };
 
-  // Function to close the login popup
   const handleCloseLoginPopup = () => {
     setShowLoginPopup(false);
   };
 
   const handleLoginClick = () => {
     navigate("/login");
-    setShowLoginPopup(false); // Show the login popup
+    setShowLoginPopup(false);
   };
 
   const handleNavigateHome = () => {
@@ -188,12 +181,20 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
             onChange={handleSearch}
             aria-label="Search Movies or TV Shows"
           />
-          <button
-            className="px-4 py-2 bg-gray-600 text-white rounded-md"
-            aria-label="Search Button"
-          >
-            <i className="fa fa-search"></i>
-          </button>
+          <div className="flex flex-row">
+            <div className="block lg:hidden flex-1">
+              <DropDown
+                selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
+              />
+            </div>
+            <button
+              className="px-4 py-2 bg-gray-600 text-white rounded-md flex-1"
+              aria-label="Search Button"
+            >
+              <i className="fa fa-search"></i>
+            </button>
+          </div>
         </div>
 
         {/* Right-Side Buttons */}

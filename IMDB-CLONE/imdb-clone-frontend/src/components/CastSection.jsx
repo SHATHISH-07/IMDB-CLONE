@@ -4,17 +4,15 @@ const CastSection = ({ cast, text, subtext }) => {
   const [scrollIndex, setScrollIndex] = useState(0);
   const containerRef = useRef(null);
 
-  // Function to handle scrolling
   const handleScroll = (direction) => {
     const scrollContainer = containerRef.current;
-    const scrollAmount = scrollContainer.offsetWidth; // Scroll by the full width of the container
+    const scrollAmount = scrollContainer.offsetWidth;
     scrollContainer.scrollBy({
       left: direction === "next" ? scrollAmount : -scrollAmount,
       behavior: "smooth",
     });
   };
 
-  // Check if cast data is available
   const hasCastData = cast && cast.length > 0;
 
   return (

@@ -15,13 +15,11 @@ const MenuBarContent = ({
     setShowLogoutPopupMenu(true);
   };
 
-  // Function to confirm logout
   const handleConfirmLogoutMenu = () => {
     setShowLogoutPopupMenu(false);
     handleLogout();
   };
 
-  // Function to cancel logout
   const handleCancelLogoutMenu = () => {
     setShowLogoutPopupMenu(false);
   };
