@@ -9,7 +9,8 @@ const HorizontalCards = ({
   genres,
   type,
   handleAddToWatchList,
-  isLoggedIn, // Add this prop to check if the user is logged in
+  isLoggedIn,
+  handleSetMovieId,
 }) => {
   const containerRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -134,19 +135,25 @@ const HorizontalCards = ({
             >
               {/* Background Image */}
               <div
-                className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity"
+                className="absolute cursor-pointer inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity"
                 style={{
                   backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
                 }}
               ></div>
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent hover:from-black hover:via-transparent hover:to-transparent transition-all"></div>
+              <div
+                onClick={() => {
+                  handleSetMovieId(movie.id, type);
+                  navigate(`/cardDetails/${movie.id}`);
+                }}
+                className="cursor-pointer absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent hover:from-black hover:via-transparent hover:to-transparent transition-all"
+              ></div>
 
               {/* Bookmark Icon */}
               <div
                 onClick={() => handleAddToWatchListWithLoginCheck(movie, type)}
-                className="absolute top-0 left-0 bg-transparent cursor-pointer rounded-full opacity-60 hover:opacity-100"
+                className="absolute  top-0 left-0 bg-transparent cursor-pointer rounded-full opacity-60 hover:opacity-100"
               >
                 <i className="fa-solid fa-bookmark text-black text-[60px] border-x-4 border-gray-300"></i>
                 <i className="fa-solid fa-plus absolute top-4 left-5 text-white text-lg"></i>

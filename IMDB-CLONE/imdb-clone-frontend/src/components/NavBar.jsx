@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DarkModeToggle from "./DarkModeToggle";
 import DropDown from "./DropDown";
 import MenuBarContent from "./MenuBarContent";
 import movieSearch from "../services/movies/movieSearch";
 import searchTv from "../services/tvShows/searchTv";
+import login from "../services/login";
 
-const NavBar = ({ currentUser, handleLogout }) => {
+const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -14,6 +15,8 @@ const NavBar = ({ currentUser, handleLogout }) => {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State to control the logout popup visibility
   const [showLoginPopup, setShowLoginPopup] = useState(false); // State for "Please login" popup
   const navigate = useNavigate();
+
+  console.log(selectedOption);
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -90,7 +93,7 @@ const NavBar = ({ currentUser, handleLogout }) => {
     <>
       {/* Search Results */}
       <div
-        className={`search-results  absolute top-16 left-0 right-0 z-20 bg-white dark:text-white dark:bg-black rounded-md shadow-md md:w-2/3 w-11/12 mx-auto mt-11 md:mt-3 ${
+        className={`search-results cursor-pointer  absolute top-16 left-0 right-0 z-20 bg-white dark:text-white dark:bg-black rounded-md shadow-md md:w-2/3 w-11/12 mx-auto mt-11 md:mt-3 ${
           searchInput.trim() === "" || searchResult.length === 0
             ? "hidden"
             : "block"
@@ -106,6 +109,12 @@ const NavBar = ({ currentUser, handleLogout }) => {
 
             return (
               <div
+                onClick={() => {
+                  handleSetMovieId(item.id, selectedOption);
+                  navigate(`/cardDetails/${searchResult.id}`);
+                  setSearchResult([]);
+                  setSearchInput("");
+                }}
                 key={item.id}
                 className="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-700"
               >
@@ -173,6 +182,7 @@ const NavBar = ({ currentUser, handleLogout }) => {
         <div className="searchBar flex flex-col md:flex-row w-full md:w-[50%] space-y-2 md:space-y-0 md:space-x-2">
           <input
             type="text"
+            value={searchInput}
             placeholder="Search for movies or TV shows"
             className="px-4 py-2 rounded-md w-full bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
             onChange={handleSearch}

@@ -18,8 +18,8 @@ const DropDown = ({ selectedOption, setSelectedOption }) => {
         onClick={toggleDropdown}
         className="px-4 py-2 text-white bg-gray-600 rounded-md  w-[105px]"
       >
-        {selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)}{" "}
-        <i className="fa-solid fa-caret-down"></i>
+        {selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)}
+        {"  "} <i className="fa-solid fa-caret-down"></i>
       </button>
 
       {isOpen && (
@@ -32,7 +32,7 @@ const DropDown = ({ selectedOption, setSelectedOption }) => {
               Movie
             </li>
             <li
-              onClick={() => handleSelect("tv show")}
+              onClick={() => handleSelect("tv")}
               className="px-4 py-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600"
             >
               Tv Show

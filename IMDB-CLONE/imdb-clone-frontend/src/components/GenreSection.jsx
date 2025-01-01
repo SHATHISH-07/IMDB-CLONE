@@ -16,7 +16,7 @@ const GenreSection = ({ genres, title, subText }) => {
   return (
     <div className="px-2 py-10 w-full text-black dark:text-white">
       <div className="flex flex-col   mb-8">
-        <h1 className="text-4xl font-semibold text-gray-700 dark:text-gray-100">
+        <h1 className="text-4xl font-semibold text-gray-900 dark:text-gray-100">
           <i className="fas fa-film mr-2"></i> {title}
         </h1>
         <p className="text-gray-700 dark:text-gray-400 text-lg mt-2">
@@ -33,7 +33,7 @@ const GenreSection = ({ genres, title, subText }) => {
           {genres.map((genre) => (
             <div
               key={genre.id}
-              className="snap-center flex-shrink-0 w-[180px] h-[180px] rounded-full bg-gradient-to-bl from-gray-800 via-blue-100 to-gray-800 flex items-center justify-center text-black text-xl font-medium  transform hover:scale-105 hover:shadow-2xl transition-all duration-300 ease-in-out"
+              className="snap-center flex-shrink-0 w-[180px] h-[180px] rounded-full bg-gradient-to-bl from-blue-900 via-blue-100 to-blue-900 flex items-center justify-center text-black text-xl font-medium  transform hover:scale-105 hover:shadow-2xl transition-all duration-300 ease-in-out"
             >
               {genre.name}
             </div>

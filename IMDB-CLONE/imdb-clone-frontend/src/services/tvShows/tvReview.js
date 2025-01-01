@@ -5,7 +5,7 @@ const getTvReview = async (id) => {
     console.log("Movie ID is required");
   }
 
-  const url = `/api/tv/reviews/${id}`;
+  const url = `/api/tv/review/${id}`;
   try {
     const response = await axios.get(url);
     return response.data;
@@ -21,4 +21,4 @@ const getTvReview = async (id) => {
   }
 };
 
-export default { getTvReview };
+export default getTvReview;

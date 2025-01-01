@@ -1,7 +1,10 @@
 import axios from "axios";
 
-const getTvVideo = async (id) => {
-  const url = `/api/tv/video/${id}`;
+const getMovieCollections = async (id) => {
+  if (!id) {
+    throw new Error("Movie ID is required");
+  }
+  const url = `/api/movie/collection/${id}`;
   try {
     const response = await axios.get(url);
     return response.data;
@@ -17,4 +20,4 @@ const getTvVideo = async (id) => {
   }
 };
 
-export default getTvVideo;
+export default getMovieCollections;

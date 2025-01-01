@@ -12,6 +12,7 @@ const movieImageRouter = require("./controllers/movie/movieImages");
 const movieVideoRouter = require("./controllers/movie/movieVideo");
 const movieReviewRouter = require("./controllers/movie/movieReviews");
 const nowPlayingRouter = require("./controllers/movie/nowPlaying");
+const movieCollectionRouter = require("./controllers/movie/movieCollection");
 const popularMovieRouter = require("./controllers/movie/popularMovie");
 const recommendMovieRouter = require("./controllers/movie/recommendMovie");
 const searchMoviesRouter = require("./controllers/movie/searchMovies");
@@ -30,6 +31,8 @@ const trendingTvRouter = require("./controllers/tvShow/trendingTv");
 const tvReviewsRouter = require("./controllers/tvShow/tvReviews");
 const tvShowImageRouter = require("./controllers/tvShow/tvShowImages");
 const tvVideoRouter = require("./controllers/tvShow/tvVideo");
+const movieCreditsRouter = require("./controllers/movie/movieCredits");
+const tvCreditsRouter = require("./controllers/tvShow/tvCredits");
 const middleware = require("./utils/middleware");
 const path = require("path");
 const app = express();
@@ -77,6 +80,8 @@ app.use("/api/movie/search", searchMoviesRouter);
 app.use("/api/movie/top_rated", topRatedMovieRouter);
 app.use("/api/movie/trending", trendingMovieRouter);
 app.use("/api/movie/upcoming", upcomingMovieRouter);
+app.use("/api/movie/credits", movieCreditsRouter);
+app.use("/api/movie/collection", movieCollectionRouter);
 
 // person
 app.use("/api/person", personRouter);
@@ -93,6 +98,7 @@ app.use("/api/tv/trending", trendingTvRouter);
 app.use("/api/tv/review", tvReviewsRouter);
 app.use("/api/tv/image", tvShowImageRouter);
 app.use("/api/tv/video", tvVideoRouter);
+app.use("/api/tv/credits", tvCreditsRouter);
 
 // error handling
 app.use(middleware.unknownEndpoint);

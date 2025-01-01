@@ -14,3 +14,14 @@
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
+
+.imageScroll,
+.videoScroll,
+#video,
+#image {
+  cursor: pointer;
+}
+
+html {
+  scroll-behavior: smooth;
+}

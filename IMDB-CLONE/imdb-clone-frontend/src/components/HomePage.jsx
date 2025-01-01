@@ -23,11 +23,11 @@ const HomePage = ({
   tvGenres,
   handleAddToWatchList,
   currentUser,
+  handleSetMovieId,
 }) => {
   const [heroPage, setHeroPage] = useState(1);
   const [trendingHeroMovies, setTrendingHeroMovies] = useState([]);
   const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   // Hero Section Movies
   useEffect(() => {
@@ -40,8 +40,6 @@ const HomePage = ({
         }
       } catch (error) {
         console.error("Error fetching movies:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -81,7 +79,6 @@ const HomePage = ({
     <div className="min-h-screen bg-gradient-to-r from-gray-400 via-gray-100 to-gray-400 dark:from-gray-900 dark:via-gray-700 dark:to-gray-900">
       <HeroSection
         movie={movie}
-        loading={loading}
         genres={genres}
         onWatchTrailer={handleWatchTrailer}
         handleAddToWatchList={handleAddToWatchList}
@@ -98,6 +95,7 @@ const HomePage = ({
         type="movie"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -109,6 +107,7 @@ const HomePage = ({
         type="movie"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -120,6 +119,7 @@ const HomePage = ({
         type="movie"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -131,6 +131,7 @@ const HomePage = ({
         type="movie"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -142,6 +143,7 @@ const HomePage = ({
         type="movie"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -153,6 +155,7 @@ const HomePage = ({
         type="movie"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <GenreSection
@@ -170,6 +173,7 @@ const HomePage = ({
         type="tv"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -181,6 +185,7 @@ const HomePage = ({
         type="tv"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -192,6 +197,7 @@ const HomePage = ({
         type="tv"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -203,6 +209,7 @@ const HomePage = ({
         type="tv"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <HorizontalCards
@@ -214,6 +221,7 @@ const HomePage = ({
         type="tv"
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
+        handleSetMovieId={handleSetMovieId}
       />
 
       <GenreSection

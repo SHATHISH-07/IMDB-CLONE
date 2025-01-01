@@ -20,7 +20,23 @@ import getOnAirTv from "./services/tvShows/onAirTv";
 import getPopularTv from "./services/tvShows/popularTv";
 import getTopRatedTv from "./services/tvShows/topRatedTv";
 import trendingTv from "./services/tvShows/trendingTv";
+import movieSearch from "./services/movies/movieSearch";
+import searchTv from "./services/tvShows/searchTv";
+import getTvCredits from "./services/tvShows/tvCredits";
+import getMovieCredits from "./services/movies/movieCredits";
+import getMovieImage from "./services/movies/movieImage";
+import getMovieVideo from "./services/movies/movieVideo";
+import getMovieReview from "./services/movies/movieReview";
+import getRecommendMovie from "./services/movies/recommendMovie";
+import getTvVideo from "./services/tvShows/tvVideos";
+import getTvReview from "./services/tvShows/tvReview";
+import getTvShowImage from "./services/tvShows/tvShowImage";
+import getRecommendTv from "./services/tvShows/recommendTv";
+import IndividualCardDetails from "./components/IndividualCardDetails";
+import getMovieCollections from "./services/movies/movieCollection";
+
 import person from "./services/persons/person";
+import { use } from "react";
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -39,10 +55,36 @@ const App = () => {
   const [genres, setGenres] = useState([]);
   const [tvGenres, setTvGenres] = useState([]);
   const [watchlist, setWatchlist] = useState([]);
+  const [detailedShowCard, setDetailedShowCard] = useState([]);
+  const [movieId, setMovieId] = useState("");
+  const [type, setType] = useState("");
+  const [videos, setVideos] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [images, setImages] = useState();
+  const [credits, setCredits] = useState({ cast: [], crew: [] });
+  const [recommendations, setRecommendations] = useState([]);
+  const [collections, setCollections] = useState([]);
 
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  const handleSetMovieId = (movieId, type) => {
+    setMovieId(movieId);
+    setType(type);
+  };
+
+  const handleWatchTrailer = (movie, type) => {
+    if (movie) {
+      window.open(
+        `https://www.youtube.com/results?search_query=${
+          type === "movie" ? movie.original_title : movie.original_name
+        } trailer`,
+        "_blank"
+      );
+    }
+  };
 
   // Handle login
   const handleLogin = async ({ username, password }) => {
@@ -77,6 +119,20 @@ const App = () => {
       console.error("Error creating user:", error);
     }
   };
+
+  // Fetch logged in user
+  useEffect(() => {
+    try {
+      const loggedUserJSON = window.localStorage.getItem("loggedUser");
+      if (loggedUserJSON) {
+        const loggedInUser = JSON.parse(loggedUserJSON);
+        setCurrentUser(loggedInUser);
+        watchList.setToken(loggedInUser.token);
+      }
+    } catch (error) {
+      console.error("Failed to retrieve logged in user:", error);
+    }
+  }, []);
 
   // Watchlist
   const handleAddToWatchList = async (movie, type) => {
@@ -142,16 +198,203 @@ const App = () => {
     }
   }, [currentUser]);
 
-  useEffect(() => {
+  // Fetch card details
+  const fetchCardDetails = async () => {
+    if (!movieId) return;
+
     try {
-      const loggedUserJSON = window.localStorage.getItem("loggedUser");
-      if (loggedUserJSON) {
-        const loggedInUser = JSON.parse(loggedUserJSON);
-        setCurrentUser(loggedInUser);
-        watchList.setToken(loggedInUser.token);
-      }
+      const response =
+        type === "movie"
+          ? await movieSearch.getMovieById(movieId)
+          : await searchTv.getTvById(movieId);
+
+      setDetailedShowCard(response);
+      localStorage.setItem("detailedShowCard", JSON.stringify(response));
     } catch (error) {
-      console.error("Failed to retrieve logged in user:", error);
+      console.error("Error fetching card details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCardDetails();
+  }, [movieId, type]);
+
+  useEffect(() => {
+    const savedDetails = localStorage.getItem("detailedShowCard");
+    if (savedDetails) {
+      setDetailedShowCard(JSON.parse(savedDetails));
+    }
+  }, []);
+
+  //Fetch Movie Collection
+  const fetchCollection = async () => {
+    try {
+      if (!detailedShowCard?.belongs_to_collection?.id) {
+        console.error("No collection data available.");
+        return;
+      }
+
+      const id = detailedShowCard.belongs_to_collection.id;
+      const response = await getMovieCollections(id);
+
+      setCollections(response.parts || []);
+
+      localStorage.setItem("collection", JSON.stringify(response.parts || []));
+    } catch (error) {
+      console.error("Error fetching collection:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movieId) {
+      fetchCollection();
+    }
+  }, [detailedShowCard]);
+
+  useEffect(() => {
+    const savedCollection = localStorage.getItem("collection");
+    if (savedCollection) {
+      setCollections(JSON.parse(savedCollection));
+    }
+  }, []);
+
+  // Fetch reviews
+  const fetchReviews = async () => {
+    try {
+      const response =
+        type === "movie"
+          ? await getMovieReview(movieId)
+          : await getTvReview(movieId);
+
+      setReviews(response.results);
+      localStorage.setItem("reviews", JSON.stringify(response.results));
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movieId) {
+      fetchReviews();
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    const savedReviews = localStorage.getItem("reviews");
+    if (savedReviews) {
+      setReviews(JSON.parse(savedReviews));
+    }
+  }, []);
+
+  // Fetch cast
+  const fetchCast = async () => {
+    try {
+      const response =
+        type === "movie"
+          ? await getMovieCredits(movieId)
+          : await getTvCredits(movieId);
+
+      setCredits(response);
+      localStorage.setItem("cast", JSON.stringify(response));
+    } catch (error) {
+      console.error("Error fetching cast:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movieId) {
+      fetchCast();
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    const savedCast = localStorage.getItem("cast");
+    if (savedCast) {
+      setCredits(JSON.parse(savedCast));
+    }
+  }, []);
+
+  // Fetch Images
+  const fetchImages = async () => {
+    try {
+      const response =
+        type === "movie"
+          ? await getMovieImage(movieId)
+          : await getTvShowImage(movieId);
+
+      setImages(response.backdrops);
+      localStorage.setItem("images", JSON.stringify(response.backdrops));
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movieId) {
+      fetchImages();
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    const savedImages = localStorage.getItem("images");
+    if (savedImages) {
+      setImages(JSON.parse(savedImages));
+    }
+  }, []);
+
+  // Fetch Videos
+  const fetchVideos = async () => {
+    try {
+      const response =
+        type === "movie"
+          ? await getMovieVideo(movieId)
+          : await getTvVideo(movieId);
+
+      setVideos(response.results);
+      localStorage.setItem("videos", JSON.stringify(response.results));
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movieId) {
+      fetchVideos();
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    const savedVideos = localStorage.getItem("videos");
+    if (savedVideos) {
+      setVideos(JSON.parse(savedVideos));
+    }
+  }, []);
+
+  // Fetch Recommendations
+  const fetchRecommendations = async () => {
+    try {
+      const response =
+        type === "movie"
+          ? await getRecommendMovie(movieId)
+          : await getRecommendTv(movieId);
+
+      setRecommendations(response.results);
+      localStorage.setItem("recommendations", JSON.stringify(response.results));
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (movieId) {
+      fetchRecommendations();
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    const savedRecommendations = localStorage.getItem("recommendations");
+    if (savedRecommendations) {
+      setRecommendations(JSON.parse(savedRecommendations));
     }
   }, []);
 
@@ -159,6 +402,8 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+
         // Fetching Movies
         const trendingMoviesDayResponse =
           await trendingMovie.getTrendingMovieByDay(page);
@@ -209,8 +454,11 @@ const App = () => {
         // Fetching Persons
         const popularPersonsResponse = await person.fetchPopularPersons(page);
         setPersons(popularPersonsResponse.results || []);
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
 
@@ -222,51 +470,86 @@ const App = () => {
 
   return (
     <div>
-      <NavBar currentUser={currentUser} handleLogout={handleLogout} />
+      <NavBar
+        currentUser={currentUser}
+        handleLogout={handleLogout}
+        handleSetMovieId={handleSetMovieId}
+      />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              trendingMoviesDay={trendingMoviesDay}
-              trendingMoviesWeek={trendingMoviesWeek}
-              topRatedMovies={topRatedMovies}
-              popularMovies={popularMovies}
-              nowPlayingMovie={nowPlayingMovie}
-              upcomingMovies={upcomingMovies}
-              trendingTvShowsDay={trendingTvShowsDay}
-              trendingTvShowsWeek={trendingTvShowsWeek}
-              topRatedTvShows={topRatedTvShows}
-              popularTvShows={popularTvShows}
-              onAirTvShows={onAirTvShows}
-              persons={persons}
-              genres={genres}
-              tvGenres={tvGenres}
-              handleAddToWatchList={handleAddToWatchList}
-              currentUser={currentUser}
-            />
-          }
-        />
-        <Route
-          path="/signup"
-          element={<SignUpSection handleSignUp={handleSignUp} />}
-        />
-        <Route
-          path="/login"
-          element={<LoginSection handleLogin={handleLogin} />}
-        />
+      {loading ? (
+        <div>
+          <div className="flex justify-center items-center h-screen  bg-gradient-to-r from-gray-400 via-gray-100 to-gray-400 dark:from-gray-900 dark:via-gray-700 dark:to-gray-900">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-700 dark:border-blue-400 "></div>
+          </div>
+        </div>
+      ) : (
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                trendingMoviesDay={trendingMoviesDay}
+                trendingMoviesWeek={trendingMoviesWeek}
+                topRatedMovies={topRatedMovies}
+                popularMovies={popularMovies}
+                nowPlayingMovie={nowPlayingMovie}
+                upcomingMovies={upcomingMovies}
+                trendingTvShowsDay={trendingTvShowsDay}
+                trendingTvShowsWeek={trendingTvShowsWeek}
+                topRatedTvShows={topRatedTvShows}
+                popularTvShows={popularTvShows}
+                onAirTvShows={onAirTvShows}
+                persons={persons}
+                genres={genres}
+                tvGenres={tvGenres}
+                handleAddToWatchList={handleAddToWatchList}
+                currentUser={currentUser}
+                handleSetMovieId={handleSetMovieId}
+              />
+            }
+          />
+          <Route
+            path="/signup"
+            element={<SignUpSection handleSignUp={handleSignUp} />}
+          />
+          <Route
+            path="/login"
+            element={<LoginSection handleLogin={handleLogin} />}
+          />
 
-        <Route
-          path="/watchlist"
-          element={
-            <WatchList
-              watchlist={watchlist}
-              onRemove={handleRemoveFromWatchList}
-            />
-          }
-        />
-      </Routes>
+          <Route
+            path="/watchlist"
+            element={
+              <WatchList
+                watchlist={watchlist}
+                onRemove={handleRemoveFromWatchList}
+              />
+            }
+          />
+
+          <Route
+            path={`/cardDetails/:id`}
+            element={
+              <IndividualCardDetails
+                handleAddToWatchList={handleAddToWatchList}
+                detailedShowCard={detailedShowCard}
+                reviews={reviews}
+                credits={credits}
+                images={images}
+                videos={videos}
+                recommendations={recommendations}
+                genres={genres}
+                tvGenres={tvGenres}
+                collections={collections}
+                type={type}
+                currentUser={currentUser}
+                handleSetMovieId={handleSetMovieId}
+                onWatchTrailer={handleWatchTrailer}
+              />
+            }
+          />
+        </Routes>
+      )}
 
       <Footer />
     </div>

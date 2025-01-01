@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getMovieImage = async (id) => {
-  const url = `/api/movie/images/${id}`;
+  const url = `/api/movie/image/${id}`;
   try {
     const response = await axios.get(url);
     return response.data;
@@ -17,4 +17,4 @@ const getMovieImage = async (id) => {
   }
 };
 
-export default { getMovieImage };
+export default getMovieImage;

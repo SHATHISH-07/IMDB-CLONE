@@ -17,4 +17,4 @@ const getMovieReview = async (id) => {
   }
 };
 
-export default { getMovieReview };
+export default getMovieReview;

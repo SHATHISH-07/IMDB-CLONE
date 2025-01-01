@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getTvShowImage = async (id) => {
-  const url = `/api/tv/images/${id}`;
+  const url = `/api/tv/image/${id}`;
   try {
     const response = await axios.get(url);
     return response.data;
@@ -17,4 +17,4 @@ const getTvShowImage = async (id) => {
   }
 };
 
-export default { getTvShowImage };
+export default getTvShowImage;

@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import "./css/HorizontalCards.css";
 
 const HeroSection = ({
   movie,
-  loading,
   genres,
   onWatchTrailer,
   handleAddToWatchList,
   isLoggedIn,
 }) => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddToWatchListWithLoginCheck = (movie, type) => {
     if (!isLoggedIn) {
@@ -42,13 +43,7 @@ const HeroSection = ({
   return (
     <div>
       <div className="mx-auto py-4">
-        {loading ? (
-          <div className="flex justify-center items-center h-[80vh]">
-            <div className="text-gray-500 dark:text-gray-300 text-lg">
-              Loading...
-            </div>
-          </div>
-        ) : movie ? (
+        {movie ? (
           <div className="flex flex-col md:flex-row gap-6">
             <div
               className="h-[100vh] md:h-[85vh] w-full lg:w-[70%] bg-cover flex items-end rounded-lg border border-black relative overflow-hidden"
@@ -146,7 +141,6 @@ const HeroSection = ({
 
 HeroSection.propTypes = {
   movie: PropTypes.object,
-  loading: PropTypes.bool.isRequired,
   genres: PropTypes.array.isRequired,
   onWatchTrailer: PropTypes.func.isRequired,
   handleAddToWatchList: PropTypes.func.isRequired,

@@ -1,7 +1,12 @@
 import axios from "axios";
 
-const getTvVideo = async (id) => {
-  const url = `/api/tv/video/${id}`;
+const baseUrl = "/api/movie/credits";
+
+const getMovieCredits = async (id) => {
+  if (!id) {
+    throw new Error("Movie ID is required");
+  }
+  const url = `${baseUrl}/${id}`;
   try {
     const response = await axios.get(url);
     return response.data;
@@ -17,4 +22,4 @@ const getTvVideo = async (id) => {
   }
 };
 
-export default getTvVideo;
+export default getMovieCredits;
