@@ -11,6 +11,7 @@ const HorizontalCards = ({
   handleAddToWatchList,
   isLoggedIn,
   handleSetMovieId,
+  navigator,
 }) => {
   const containerRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -108,14 +109,14 @@ const HorizontalCards = ({
           </h1>
           <p className="text-gray-700 dark:text-gray-400 text-lg">{subText}</p>
           <button
-            onClick={() => handleScroll("forward")}
+            onClick={() => navigate(`/${navigator}`)}
             className="block md:hidden bg-gray-800 text-white py-2 px-4 mt-3 rounded-lg hover:bg-gray-700 shadow-lg transition-all"
           >
             View All
           </button>
         </div>
         <button
-          onClick={() => handleScroll("forward")}
+          onClick={() => navigate(`/${navigator}`)}
           className="hidden md:block bg-gray-800 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-lg transition-all"
         >
           View All

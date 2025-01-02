@@ -34,9 +34,9 @@ import getTvShowImage from "./services/tvShows/tvShowImage";
 import getRecommendTv from "./services/tvShows/recommendTv";
 import IndividualCardDetails from "./components/IndividualCardDetails";
 import getMovieCollections from "./services/movies/movieCollection";
+import AllCardShow from "./components/AllCardShow";
 
 import person from "./services/persons/person";
-import { use } from "react";
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -508,10 +508,12 @@ const App = () => {
               />
             }
           />
+
           <Route
             path="/signup"
             element={<SignUpSection handleSignUp={handleSignUp} />}
           />
+
           <Route
             path="/login"
             element={<LoginSection handleLogin={handleLogin} />}
@@ -523,6 +525,7 @@ const App = () => {
               <WatchList
                 watchlist={watchlist}
                 onRemove={handleRemoveFromWatchList}
+                handleSetMovieId={handleSetMovieId}
               />
             }
           />
@@ -545,6 +548,215 @@ const App = () => {
                 currentUser={currentUser}
                 handleSetMovieId={handleSetMovieId}
                 onWatchTrailer={handleWatchTrailer}
+              />
+            }
+          />
+
+          <Route
+            path="/trendingMoviesDay"
+            element={
+              <AllCardShow
+                title="Trending Movies"
+                subText="Trending Movies of the day"
+                movies={trendingMoviesDay}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/trendingMoviesWeek"
+            element={
+              <AllCardShow
+                title="Trending Movies"
+                subText="Trending Movies of the week"
+                movies={trendingMoviesWeek}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/topRatedMovies"
+            element={
+              <AllCardShow
+                title="Top Rated Movies"
+                subText="Top Rated Movies"
+                movies={topRatedMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/popularMovies"
+            element={
+              <AllCardShow
+                title="Popular Movies"
+                subText="Popular Movies"
+                movies={popularMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/upcomingMovies"
+            element={
+              <AllCardShow
+                title="Upcoming Movies"
+                subText="Upcoming Movies"
+                movies={upcomingMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/nowPlayingMovies"
+            element={
+              <AllCardShow
+                title="Now Playing Movies"
+                subText="Now Playing Movies"
+                movies={nowPlayingMovie}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/topRatedTvShows"
+            element={
+              <AllCardShow
+                title="Top Rated TV Shows"
+                subText="Top Rated TV Shows"
+                movies={topRatedTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/popularTvShows"
+            element={
+              <AllCardShow
+                title="Popular TV Shows"
+                subText="Popular TV Shows"
+                movies={popularTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/trendingTvShowsDay"
+            element={
+              <AllCardShow
+                title="Trending TV Shows"
+                subText="Trending TV Shows of the week"
+                movies={trendingTvShowsDay}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/trendingTvShowsWeek"
+            element={
+              <AllCardShow
+                title="Trending TV Shows"
+                subText="Trending TV Shows of the week"
+                movies={trendingTvShowsWeek}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/onAirTvShows"
+            element={
+              <AllCardShow
+                title="On Air TV Shows"
+                subText="On Air TV Shows"
+                movies={onAirTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
               />
             }
           />

@@ -96,6 +96,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="trendingMoviesDay"
       />
 
       <HorizontalCards
@@ -108,6 +109,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="trendingMoviesWeek"
       />
 
       <HorizontalCards
@@ -120,6 +122,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="topRatedMovies"
       />
 
       <HorizontalCards
@@ -132,6 +135,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="popularMovies"
       />
 
       <HorizontalCards
@@ -144,6 +148,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="upcomingMovies"
       />
 
       <HorizontalCards
@@ -156,6 +161,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="nowPlayingMovie"
       />
 
       <GenreSection
@@ -174,6 +180,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="topRatedTvShows"
       />
 
       <HorizontalCards
@@ -186,6 +193,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="popularTvShows"
       />
 
       <HorizontalCards
@@ -198,6 +206,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="trendingTvShowsDay"
       />
 
       <HorizontalCards
@@ -210,6 +219,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="trendingTvShowsWeek"
       />
 
       <HorizontalCards
@@ -222,6 +232,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
+        navigator="onAirTvShows"
       />
 
       <GenreSection

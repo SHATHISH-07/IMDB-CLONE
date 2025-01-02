@@ -216,7 +216,7 @@ const IndividualCardDetails = ({
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row px-5 h-auto lg:h-[65vh] gap-4 overflow-x-hidden">
+      <div className="flex flex-col lg:flex-row px-3 h-auto lg:h-[65vh] gap-4 overflow-x-hidden">
         <div
           id="poster"
           style={{
@@ -249,9 +249,9 @@ const IndividualCardDetails = ({
               <ClipLoader color="#ffffff" loading={isVideoLoading} size={50} />
             </div>
           )}
-          {videos && videos.length > 0 ? (
+          {videos[0] && videos.length > 0 ? (
             <ReactPlayer
-              url={`https://www.youtube.com/watch?v=${videos[0]?.key}`}
+              url={`https://www.youtube-nocookie.com/embed/${videos[0]?.key}`}
               playing={true}
               controls={true}
               loop={true}

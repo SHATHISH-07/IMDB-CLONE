@@ -206,7 +206,7 @@ const RecommendCard = ({
                   </span>
                   <span>{getGenreNames(selectedMovie.genre_ids)}</span>
                 </div>
-                <div className="mt-4">
+                <div className="mt-4 dark:text-white">
                   <p>{selectedMovie.overview || "No overview available."}</p>
                 </div>
               </div>

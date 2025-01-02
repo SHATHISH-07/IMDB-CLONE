@@ -189,7 +189,7 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
               />
             </div>
             <button
-              className="px-4 py-2 bg-gray-600 text-white rounded-md flex-1"
+              className="px-4 py-2 ml-2 bg-gray-600 text-white rounded-md flex-1"
               aria-label="Search Button"
             >
               <i className="fa fa-search"></i>

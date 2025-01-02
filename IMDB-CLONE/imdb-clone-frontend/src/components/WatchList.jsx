@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-const WatchList = ({ watchlist, onRemove }) => {
+const WatchList = ({ watchlist, onRemove, handleSetMovieId }) => {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
 
   const filteredWatchlist = useMemo(
     () =>
@@ -77,13 +80,17 @@ const WatchList = ({ watchlist, onRemove }) => {
                 >
                   <td className="py-2 px-5">
                     <img
+                      onClick={() => {
+                        handleSetMovieId(movie.movieId, movie.mediaType);
+                        navigate(`/cardDetails/${movie.movieId}`);
+                      }}
                       src={
                         movie.poster_path
                           ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
                           : "https://via.placeholder.com/200x300?text=No+Image"
                       }
                       alt={movie.title}
-                      className="w-40 h-48 rounded-lg"
+                      className="w-40 h-48 rounded-lg cursor-pointer"
                     />
                     <p className="w-40">{movie.title}</p>
                   </td>

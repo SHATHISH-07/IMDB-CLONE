@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const MenuBarContent = ({
   isMenuOpen,
@@ -70,46 +70,60 @@ const MenuBarContent = ({
             {/* Movies Section */}
             <div className="menu-section space-y-4">
               <h2 className="text-xl font-semibold">Movies</h2>
-              <ul className="space-y-2">
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Trending Movies
-                  </a>
+              <ul className="space-y-2 cursor-pointer">
+                <li
+                  onClick={() => {
+                    navigate("/trendingMoviesDay");
+                    toggleMenu();
+                  }}
+                  className="text-lg hover:text-blue-500"
+                >
+                  Trending Movies Day
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Popular Movies
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/trendingMoviesWeek");
+                    toggleMenu();
+                  }}
+                >
+                  Trending Movies week
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Top Rated Movies
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/popularMovies");
+                    toggleMenu();
+                  }}
+                >
+                  Popular Movies
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Upcoming Movies
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/topRatedMovies");
+                    toggleMenu();
+                  }}
+                >
+                  Top Rated Movies
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Now Playing
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/upcomingMovies");
+                    toggleMenu();
+                  }}
+                >
+                  Upcoming Movies
+                </li>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/nowPlayingMovies");
+                    toggleMenu();
+                  }}
+                >
+                  Now Playing
                 </li>
                 <div>
                   <h2
@@ -166,47 +180,53 @@ const MenuBarContent = ({
             {/* TV Shows Section */}
             <div className="menu-section space-y-4">
               <h2 className="text-xl font-semibold">TV Shows</h2>
-              <ul className="space-y-2">
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Trending TV Shows
-                  </a>
+              <ul className="space-y-2 cursor-pointer">
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/trendingTvShowsDay");
+                    toggleMenu();
+                  }}
+                >
+                  Trending TV Shows Day
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Popular TV Shows
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/trendingTvShowsWeek");
+                    toggleMenu();
+                  }}
+                >
+                  Trending TV Shows Week
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    Top Rated TV Shows
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/popularTvShows");
+                    toggleMenu();
+                  }}
+                >
+                  Popular TV Shows
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    On Air
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/topRatedTvShows");
+                    toggleMenu();
+                  }}
+                >
+                  Top Rated TV Shows
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg hover:text-blue-500 transition"
-                  >
-                    On Air Today
-                  </a>
+                <li
+                  className="text-lg hover:text-blue-500"
+                  onClick={() => {
+                    navigate("/onAirTvShows");
+                    toggleMenu();
+                  }}
+                >
+                  On Air
                 </li>
+
                 <div onClick={handleWatchListNavigate} className="pt-10">
                   <li className=" hover:text-blue-500 text-2xl transition">
                     <a href="#">

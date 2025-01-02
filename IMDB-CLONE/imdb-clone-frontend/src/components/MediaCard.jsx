@@ -76,7 +76,7 @@ const MediaCard = ({
   }
 
   return (
-    <div className="flex flex-col md:flex-row mx-5 my-10 rounded-xl overflow-hidden shadow-lg dark:text-white">
+    <div className="flex flex-col md:flex-row mx-5 my-10 rounded-xl overflow-hidden shadow-lg dark:bg-gray-900 dark:bg-opacity-50 dark:text-white">
       {/* Poster Section */}
       {!mediaDetails.belongs_to_collection && !mediaDetails.seasons?.length && (
         <div className="w-full md:w-1/4">
@@ -229,7 +229,7 @@ const MediaCard = ({
               <p className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
                 Please login to access the Watchlist
               </p>
-              <div className="flex justify-center mt-4">
+              <div className="flex  mt-4">
                 <button
                   onClick={handleCloseLoginPopup}
                   className="text-red-500 px-4 mr-2 py-2 rounded-lg hover:bg-gray-300 transition-all"
@@ -238,7 +238,7 @@ const MediaCard = ({
                 </button>
                 <button
                   onClick={handleLoginClick}
-                  className="bg-red-600 dark:bg-black rounded-lg px-4 py-2 text-white"
+                  className="text-blue-600 dark:hover:bg-gray-300 rounded-lg px-4 py-2 "
                 >
                   Login!
                 </button>
