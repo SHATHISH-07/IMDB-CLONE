@@ -119,12 +119,12 @@ const MediaCard = ({
                   <h3 className="text-xl font-semibold mb-2">Seasons</h3>
                   <div
                     ref={containerRef}
-                    className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-hidden"
+                    className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-hidden sm:py-4 sm:px-2"
                   >
                     {mediaDetails.seasons.map((season) => (
                       <div
                         key={season.id}
-                        className="min-w-[300px] p-4 rounded-lg bg-gray-200 dark:bg-gray-900 shadow-lg transform hover:scale-105 transition-transform duration-300"
+                        className="min-w-[300px] p-4 rounded-lg bg-gray-200 dark:bg-gray-900 shadow-lg transform hover:scale-105 transition-transform duration-300 sm:min-w-[250px] sm:p-3"
                       >
                         <img
                           src={getPosterUrl(season.poster_path)}
@@ -146,7 +146,7 @@ const MediaCard = ({
                   </div>
                   <button
                     onClick={() => handleScroll("forward")}
-                    className="absolute right-0 top-2/4 transform -translate-y-1/2 bg-black text-white border-2 p-2 shadow-lg bg-opacity-50 rounded-md hover:bg-opacity-70 transition-all"
+                    className="absolute right-0 top-2/4 transform -translate-y-1/2 bg-black text-white border-2 p-2 shadow-lg bg-opacity-50 rounded-md hover:bg-opacity-70 transition-all sm:p-1"
                   >
                     <i className="fa-solid fa-chevron-right text-2xl"></i>
                   </button>
@@ -160,12 +160,12 @@ const MediaCard = ({
                   </h3>
                   <div
                     ref={containerRef}
-                    className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-hidden py-4 px-2"
+                    className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-hidden sm:py-4 sm:px-2"
                   >
                     {collections.map((collection) => (
                       <div
                         key={collection.id}
-                        className="min-w-[300px] p-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
+                        className="min-w-[300px] p-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 sm:min-w-[250px] sm:p-3"
                       >
                         <img
                           src={getPosterUrl(collection.poster_path)}
@@ -187,7 +187,7 @@ const MediaCard = ({
                   </div>
                   <button
                     onClick={() => handleScroll("forward")}
-                    className="absolute right-0 top-2/4 transform -translate-y-1/2 bg-black text-white border-2 p-2 shadow-lg bg-opacity-50 rounded-md hover:bg-opacity-70 transition-all"
+                    className="absolute right-0 top-2/4 transform -translate-y-1/2 bg-black text-white border-2 p-2 shadow-lg bg-opacity-50 rounded-md hover:bg-opacity-70 transition-all sm:p-1"
                   >
                     <i className="fa-solid fa-chevron-right text-2xl"></i>
                   </button>
