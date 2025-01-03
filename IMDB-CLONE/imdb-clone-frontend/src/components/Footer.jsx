@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ currentUser }) => {
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-gray-800 dark:bg-black text-white py-6 ">
       <div className=" mx-auto md:px-6">
@@ -21,6 +24,23 @@ const Footer = () => {
             Terms of Service
           </a>
         </div>
+        <div
+          onClick={() => {
+            if (!currentUser) {
+              navigate("/login");
+            }
+          }}
+          className="text-lg hover:text-blue-400 cursor-pointer flex justify-center  pb-5"
+        >
+          {currentUser ? (
+            <>
+              <i className="fa-solid fa-user p-1"></i> {currentUser.name}
+            </>
+          ) : (
+            "Sign In"
+          )}
+        </div>
+
         <div className="flex justify-center px-10 md:px-0 space-x-6 mb-6">
           <a
             href="https://facebook.com"

@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-const CastSection = ({ cast, text, subtext }) => {
+const CastSection = ({ cast, text, subtext, handleSetPersonId }) => {
   const [scrollIndex, setScrollIndex] = useState(0);
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleScroll = (direction) => {
     const scrollContainer = containerRef.current;
@@ -11,6 +13,10 @@ const CastSection = ({ cast, text, subtext }) => {
       left: direction === "next" ? scrollAmount : -scrollAmount,
       behavior: "smooth",
     });
+  };
+
+  const handleSetPersonIdClick = (id) => {
+    handleSetPersonId(id);
   };
 
   const hasCastData = cast && cast.length > 0;
@@ -41,7 +47,13 @@ const CastSection = ({ cast, text, subtext }) => {
           >
             {cast.map((castMember) => (
               <div key={castMember.id} className="text-center group">
-                <div className="snap-center flex-shrink-0 w-[250px] h-[250px] rounded-full shadow-xl overflow-hidden relative bg-gray-900 dark:bg-gray-800 transition-transform transform group-hover:scale-105 group-hover:shadow-2xl">
+                <div
+                  onClick={() => {
+                    handleSetPersonIdClick(castMember.id);
+                    navigate(`/person/${castMember.id}`);
+                  }}
+                  className="snap-center cursor-pointer flex-shrink-0 w-[250px] h-[250px] rounded-full shadow-xl overflow-hidden relative bg-gray-900 dark:bg-gray-800 transition-transform transform group-hover:scale-105 group-hover:shadow-2xl"
+                >
                   {/* Profile Image or Default Icon */}
                   <div
                     className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity"
@@ -58,7 +70,7 @@ const CastSection = ({ cast, text, subtext }) => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                 </div>
 
-                {/* Name and Info Button */}
+                {/* Name  */}
                 <div className="mt-2">
                   <h3 className="text-lg font-bold text-black dark:text-white truncate">
                     {castMember.original_name}

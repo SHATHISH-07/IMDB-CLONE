@@ -15,7 +15,7 @@ const fetchPopularPersons = async (page = 1) => {
   }
 };
 
-// Fetch details of a person by ID
+// Fetch person details by ID
 const fetchPersonById = async (id) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/search/${id}`);
@@ -40,9 +40,25 @@ const searchPersons = async (query, page = 1, language = "en-US") => {
 };
 
 // Fetch movie credits for a person by ID
-const fetchMovieCredits = async (id) => {
+const fetchPersonMovieCredits = async (id) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/movies_credits/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error response from server:", error.response.data);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up request:", error.message);
+    }
+    throw error;
+  }
+};
+
+const fetchPersonTvCredits = async (id) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/tv_credits/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching movie credits:", error.message);
@@ -65,6 +81,7 @@ export default {
   fetchPopularPersons,
   fetchPersonById,
   searchPersons,
-  fetchMovieCredits,
+  fetchPersonMovieCredits,
+  fetchPersonTvCredits,
   fetchPersonImages,
 };

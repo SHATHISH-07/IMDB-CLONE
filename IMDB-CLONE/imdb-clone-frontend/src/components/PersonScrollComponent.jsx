@@ -1,12 +1,15 @@
 import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const PersonsScrollComponent = ({ people }) => {
+const PersonsScrollComponent = ({ people, handleSetPersonId }) => {
   const containerRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const popupRef = useRef(null);
   const ignoreClick = useRef(false);
+
+  const navigate = useNavigate();
 
   const handleShowPopup = (person) => {
     setSelectedPerson(person);
@@ -63,14 +66,14 @@ const PersonsScrollComponent = ({ people }) => {
             Discover profiles of trending individuals.
           </p>
           <button
-            onClick={() => handleScroll("forward")}
+            onClick={() => navigate("/person/popular")}
             className="block md:hidden bg-gray-800 text-white py-2 px-6 mt-3 rounded-lg hover:bg-gray-700 shadow-lg transition-all"
           >
             View All
           </button>
         </div>
         <button
-          onClick={() => handleScroll("forward")}
+          onClick={() => navigate("/person/popular")}
           className="hidden md:block bg-gray-800 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-lg transition-all"
         >
           View All
@@ -81,7 +84,7 @@ const PersonsScrollComponent = ({ people }) => {
       <div className="relative">
         <div
           ref={containerRef}
-          className="flex gap-6 overflow-x-scroll scroll-smooth snap-x snap-mandatory w-full scrollbar-hidden"
+          className="flex gap-6 cursor-pointer overflow-x-scroll scroll-smooth snap-x snap-mandatory w-full scrollbar-hidden"
         >
           {people.map((person) => (
             <div key={person.id} className="text-center group">
@@ -93,7 +96,13 @@ const PersonsScrollComponent = ({ people }) => {
                     backgroundImage: `url(https://image.tmdb.org/t/p/original${person.profile_path})`,
                   }}
                 ></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+                <div
+                  onClick={() => {
+                    handleSetPersonId(person.id);
+                    navigate(`/person/${person.id}`);
+                  }}
+                  className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"
+                ></div>
               </div>
 
               {/* Name and Info Button */}
@@ -162,12 +171,13 @@ const PersonsScrollComponent = ({ people }) => {
                   Known For: {selectedPerson.known_for_department || "Unknown"}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  Popularity:{" "}
+                  <i className="fa-solid fa-star text-yellow-500 mr-2"></i>
                   {selectedPerson.popularity.toFixed(0) ||
                     "No popularity available."}
                 </p>
                 <p className="mt-2 text-gray-600 dark:text-gray-400">
-                  Gender: {selectedPerson.gender === 1 ? "Female" : "Male"}
+                  <i className="fa-solid fa-venus-mars text-blue-500 mr-2"></i>
+                  {selectedPerson.gender === 1 ? "Female" : "Male"}
                 </p>
               </div>
 

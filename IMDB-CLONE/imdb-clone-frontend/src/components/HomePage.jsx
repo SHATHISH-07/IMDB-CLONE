@@ -24,6 +24,8 @@ const HomePage = ({
   handleAddToWatchList,
   currentUser,
   handleSetMovieId,
+  handleSetGenreId,
+  handleSetPersonId,
 }) => {
   const [heroPage, setHeroPage] = useState(1);
   const [trendingHeroMovies, setTrendingHeroMovies] = useState([]);
@@ -168,6 +170,8 @@ const HomePage = ({
         genres={genres}
         title="Explore Genres"
         subText="Movies by Genre"
+        handleSetGenreId={handleSetGenreId}
+        type="movie"
       />
 
       <HorizontalCards
@@ -239,9 +243,14 @@ const HomePage = ({
         genres={tvGenres}
         title="Explore Genres"
         subText="Tv Shows by Genre"
+        handleSetGenreId={handleSetGenreId}
+        type="tv"
       />
 
-      <PersonsScrollComponent people={persons} />
+      <PersonsScrollComponent
+        people={persons}
+        handleSetPersonId={handleSetPersonId}
+      />
     </div>
   );
 };

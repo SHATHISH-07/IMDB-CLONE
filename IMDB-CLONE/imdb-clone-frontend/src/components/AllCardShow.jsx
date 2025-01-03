@@ -188,7 +188,7 @@ const AllCardShow = ({
         </button>
 
         {/* Current Page Display */}
-        <span className="w-[100px] h-[50px] flex items-center justify-center bg-black  text-white bg-opacity-75 border-2 border-gray-500 dark:border-white rounded-xl text-xl">
+        <span className="w-[70px] h-[50px] flex items-center justify-center bg-black  text-white bg-opacity-75 border-2 border-gray-500 dark:border-white rounded-xl text-xl">
           {page}
         </span>
 

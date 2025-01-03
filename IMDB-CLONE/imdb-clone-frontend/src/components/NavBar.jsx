@@ -5,6 +5,7 @@ import DropDown from "./DropDown";
 import MenuBarContent from "./MenuBarContent";
 import movieSearch from "../services/movies/movieSearch";
 import searchTv from "../services/tvShows/searchTv";
+import "./css/HorizontalCards.css";
 
 const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,7 +32,7 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
           response = await searchTv.searchTvShows(searchInput);
         }
 
-        setSearchResult(response.results.slice(0, 5) || []);
+        setSearchResult(response.results.slice(0, 10) || []);
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
@@ -86,7 +87,7 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
     <>
       {/* Search Results */}
       <div
-        className={`search-results cursor-pointer  absolute top-16 left-0 right-0 z-20 bg-white dark:text-white dark:bg-black rounded-md shadow-md md:w-2/3 w-11/12 mx-auto mt-11 md:mt-3 ${
+        className={`search-results cursor-pointer  absolute top-16 left-0 right-0 z-20 bg-white dark:text-white dark:bg-black rounded-md shadow-md md:w-2/3 w-11/12 h-[71%] md:h-[80%] mx-auto mt-11 md:mt-3 overflow-y-scroll scrollbar-custom ${
           searchInput.trim() === "" || searchResult.length === 0
             ? "hidden"
             : "block"
@@ -172,7 +173,7 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
         </div>
 
         {/* Search Bar */}
-        <div className="searchBar flex flex-col md:flex-row w-full md:w-[50%] space-y-2 md:space-y-0 md:space-x-2">
+        <div className="searchBar flex flex-col md:flex-row w-full md:w-[50%]  space-y-2 md:space-y-0 md:space-x-2">
           <input
             type="text"
             value={searchInput}

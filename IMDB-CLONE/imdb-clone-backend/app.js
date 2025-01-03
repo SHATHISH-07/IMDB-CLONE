@@ -70,6 +70,7 @@ app.use(
 
 // movie
 app.use("/api/movie/genres", genresRouter);
+app.use("/api/movie/genres/:id", genresRouter);
 app.use("/api/movie/image", movieImageRouter);
 app.use("/api/movie/video", movieVideoRouter);
 app.use("/api/movie/review", movieReviewRouter);
@@ -88,6 +89,7 @@ app.use("/api/person", personRouter);
 
 // tvShow
 app.use("/api/tv/genres", genreTvRouter);
+app.use("/api/tv/genres/:id", genreTvRouter);
 app.use("/api/tv/now_playing", nowPlayingTvRouter);
 app.use("/api/tv/on_air", onAirTvRouter);
 app.use("/api/tv/popular", popularTvRouter);

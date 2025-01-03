@@ -1,7 +1,9 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-const GenreSection = ({ genres, title, subText }) => {
+const GenreSection = ({ genres, title, subText, handleSetGenreId, type }) => {
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleScroll = (direction) => {
     if (containerRef.current) {
@@ -11,6 +13,10 @@ const GenreSection = ({ genres, title, subText }) => {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleGenreIdSet = (genreId, type) => {
+    handleSetGenreId(genreId, type);
   };
 
   return (
@@ -33,7 +39,11 @@ const GenreSection = ({ genres, title, subText }) => {
           {genres.map((genre) => (
             <div
               key={genre.id}
-              className="snap-center flex-shrink-0 w-[180px] h-[180px] rounded-full bg-gradient-to-bl from-blue-900 via-blue-100 to-blue-900 flex items-center justify-center text-black text-xl font-medium  transform hover:scale-105 hover:shadow-2xl transition-all duration-300 ease-in-out"
+              className="snap-center cursor-pointer flex-shrink-0 w-[180px] h-[180px] rounded-full bg-gradient-to-bl from-gray-900 via-blue-100 to-gray-900 flex items-center justify-center text-black text-xl font-medium  transform hover:scale-105 hover:shadow-2xl transition-all duration-300 ease-in-out"
+              onClick={() => {
+                handleGenreIdSet(genre.id, type);
+                navigate(`/${type}/${genre.name}`);
+              }}
             >
               {genre.name}
             </div>

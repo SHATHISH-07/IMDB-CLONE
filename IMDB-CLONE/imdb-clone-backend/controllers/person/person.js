@@ -35,12 +35,13 @@ personRouter.get("/search/:id", async (req, res) => {
     const { data } = await axios.get(`${PERSON_ID_URL}/${id}`, {
       params: {
         api_key: process.env.API_KEY,
+        id,
       },
     });
     res.status(200).json(data);
   } catch (error) {
-    console.error("Error fetching popular person:", error.message);
-    res.status(500).json({ error: "Failed to fetch popular person" });
+    console.error("Error fetching person:", error.message);
+    res.status(500).json({ error: "Failed to fetch person" });
   }
 });
 
@@ -76,6 +77,26 @@ personRouter.get("/movies_credits/:id", async (req, res) => {
       {
         params: {
           api_key: process.env.API_KEY,
+          id,
+        },
+      }
+    );
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching popular person:", error.message);
+    res.status(500).json({ error: "Failed to fetch popular person" });
+  }
+});
+
+personRouter.get("/tv_credits/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const { data } = await axios.get(
+      `https://api.themoviedb.org/3/person/${id}/tv_credits`,
+      {
+        params: {
+          api_key: process.env.API_KEY,
+          id,
         },
       }
     );
@@ -92,6 +113,7 @@ personRouter.get("/images/:id", async (req, res) => {
     const { data } = await axios.get(`${PERSON_IMAGES_URL}/${id}/images`, {
       params: {
         api_key: process.env.API_KEY,
+        id,
       },
     });
     res.status(200).json(data);

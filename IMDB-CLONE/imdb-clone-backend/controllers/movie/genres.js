@@ -24,11 +24,14 @@ genresRouter.get("/", async (req, res) => {
 
 genresRouter.get("/:id", async (req, res) => {
   const id = req.params.id;
+  const page = parseInt(req.query.page, 10) || 1;
+
   try {
     const { data } = await axios.get(GENRE_SEARCH_URI, {
       params: {
         api_key: process.env.API_KEY,
         with_genres: id,
+        page,
         language: req.query.language || "en-US",
       },
     });

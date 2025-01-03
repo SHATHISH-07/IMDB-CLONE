@@ -18,11 +18,11 @@ const getAllGenresMovie = async () => {
   }
 };
 
-const getMovieByGenre = async (genreId) => {
+const getMovieByGenre = async (genreId, page = 1) => {
   if (!genreId) {
     throw new Error("Genre ID is required");
   }
-  const url = `${baseUrl}/${genreId}`;
+  const url = `${baseUrl}/${genreId}?page=${page}`;
   try {
     const response = await axios.get(url);
     return response.data;

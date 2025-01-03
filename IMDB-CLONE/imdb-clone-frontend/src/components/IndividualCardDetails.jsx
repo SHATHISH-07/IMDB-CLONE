@@ -8,6 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import "./css/HorizontalCards.css";
 
 const IndividualCardDetails = ({
+  handleSetPersonId,
   handleAddToWatchList,
   detailedShowCard,
   reviews,
@@ -328,17 +329,24 @@ const IndividualCardDetails = ({
         currentUser={currentUser}
       />
 
-      <CastSection cast={cast} text="Cast" subtext="The stars of the show" />
+      <CastSection
+        cast={cast}
+        text="Cast"
+        subtext="The stars of the show"
+        handleSetPersonId={handleSetPersonId}
+      />
 
       <CastSection
         cast={directors}
         text="Directors"
         subtext="The storyteller behind the lens"
+        handleSetPersonId={handleSetPersonId}
       />
       <CastSection
         cast={writers}
         text="Writers"
         subtext="The architect of the plot"
+        handleSetPersonId={handleSetPersonId}
       />
 
       <div className="scroll-smooth dark:text-white">

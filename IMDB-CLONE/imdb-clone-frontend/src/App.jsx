@@ -35,6 +35,8 @@ import getRecommendTv from "./services/tvShows/recommendTv";
 import IndividualCardDetails from "./components/IndividualCardDetails";
 import getMovieCollections from "./services/movies/movieCollection";
 import AllCardShow from "./components/AllCardShow";
+import AllPersonShow from "./components/AllPersonShow";
+import IndividualPerson from "./components/IndividualPerson";
 
 import person from "./services/persons/person";
 
@@ -64,15 +66,32 @@ const App = () => {
   const [credits, setCredits] = useState({ cast: [], crew: [] });
   const [recommendations, setRecommendations] = useState([]);
   const [collections, setCollections] = useState([]);
-
+  const [genreMovies, setGenreMovies] = useState([]);
+  const [genreTvShows, setGenreTvShows] = useState([]);
+  const [movieGenreId, setMovieGenreId] = useState(28);
+  const [tvGenreId, setTvGenreId] = useState(10759);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [personId, setPersonId] = useState();
+  const [personData, setPersonData] = useState();
 
   const navigate = useNavigate();
 
   const handleSetMovieId = (movieId, type) => {
     setMovieId(movieId);
     setType(type);
+  };
+
+  const handleSetGenreId = (genreId, type) => {
+    if (type === "movie") {
+      setMovieGenreId(genreId);
+    } else if (type === "tv") {
+      setTvGenreId(genreId);
+    }
+  };
+
+  const handleSetPersonId = (personId) => {
+    setPersonId(personId);
   };
 
   const handleWatchTrailer = (movie, type) => {
@@ -398,6 +417,57 @@ const App = () => {
     }
   }, []);
 
+  //Fetch Movie Genres
+  useEffect(() => {
+    const fetchGenresAndMovies = async () => {
+      try {
+        const [genresResponse, genresMovieResponse] = await Promise.all([
+          genre.getAllGenresMovie(),
+          genre.getMovieByGenre(movieGenreId, page),
+        ]);
+        setGenres(genresResponse || []);
+        setGenreMovies(genresMovieResponse || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchGenresAndMovies();
+  }, [movieGenreId, page]);
+
+  //Fetch Tv Genres
+  useEffect(() => {
+    const fetchGenresAndMovies = async () => {
+      try {
+        const [genresResponse, genresTvResponse] = await Promise.all([
+          genreTv.getAllGenresTv(),
+          genreTv.getTvByGenre(tvGenreId, page),
+        ]);
+        setTvGenres(genresResponse || []);
+        setGenreTvShows(genresTvResponse || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchGenresAndMovies();
+  }, [tvGenreId, page]);
+
+  useEffect(() => {
+    const fetchPersonDetails = async () => {
+      if (!personId) return;
+
+      try {
+        const personDetailsData = await person.fetchPersonById(personId);
+        setPersonData(personDetailsData);
+      } catch (error) {
+        console.error("Error fetching person details:", error);
+      }
+    };
+
+    fetchPersonDetails();
+  }, [personId]);
+
   // Fetch movie, tv, and genre data
   useEffect(() => {
     const fetchData = async () => {
@@ -444,17 +514,6 @@ const App = () => {
         const onAirTvShowsResponse = await getOnAirTv(page);
         setOnAirTvShows(onAirTvShowsResponse.results || []);
 
-        // Fetching Genres
-        const genresResponse = await genre.getAllGenresMovie();
-        setGenres(genresResponse || []);
-
-        const tvGenresResponse = await genreTv.getAllGenresTv();
-        setTvGenres(tvGenresResponse || []);
-
-        // Fetching Persons
-        const popularPersonsResponse = await person.fetchPopularPersons(page);
-        setPersons(popularPersonsResponse.results || []);
-
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -463,6 +522,20 @@ const App = () => {
     };
 
     fetchData();
+  }, [page]);
+
+  // Fetching popular persons
+  useEffect(() => {
+    const fetchPopularPersons = async () => {
+      try {
+        const popularPersonsResponse = await person.fetchPopularPersons(page);
+        setPersons(popularPersonsResponse.results || []);
+      } catch (error) {
+        console.error("Error fetching popular persons:", error);
+      }
+    };
+
+    fetchPopularPersons();
   }, [page]);
 
   const handleNextPage = () => setPage(page + 1);
@@ -505,6 +578,8 @@ const App = () => {
                 handleAddToWatchList={handleAddToWatchList}
                 currentUser={currentUser}
                 handleSetMovieId={handleSetMovieId}
+                handleSetGenreId={handleSetGenreId}
+                handleSetPersonId={handleSetPersonId}
               />
             }
           />
@@ -534,6 +609,7 @@ const App = () => {
             path={`/cardDetails/:id`}
             element={
               <IndividualCardDetails
+                handleSetPersonId={handleSetPersonId}
                 handleAddToWatchList={handleAddToWatchList}
                 detailedShowCard={detailedShowCard}
                 reviews={reviews}
@@ -760,10 +836,672 @@ const App = () => {
               />
             }
           />
+
+          <Route
+            path="/movie/Action"
+            element={
+              <AllCardShow
+                title="Action Movies"
+                subText="Action Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+
+          <Route
+            path="/movie/Adventure"
+            element={
+              <AllCardShow
+                title="Adventure Movies"
+                subText="Adventure Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Animation"
+            element={
+              <AllCardShow
+                title="Animation Movies"
+                subText="Animation Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/comedy"
+            element={
+              <AllCardShow
+                title="Comedy Movies"
+                subText="Comedy Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Crime"
+            element={
+              <AllCardShow
+                title="Crime Movies"
+                subText="Crime Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Documentary"
+            element={
+              <AllCardShow
+                title="=Documentary Movies"
+                subText="Documentary Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Drama"
+            element={
+              <AllCardShow
+                title="Drama Movies"
+                subText="Drama Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Family"
+            element={
+              <AllCardShow
+                title="Family Movies"
+                subText="Family Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Fantasy"
+            element={
+              <AllCardShow
+                title="Fantasy Movies"
+                subText="Fantasy Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/History"
+            element={
+              <AllCardShow
+                title="History Movies"
+                subText="History Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Horror"
+            element={
+              <AllCardShow
+                title="Horror Movies"
+                subText="Horror Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Music"
+            element={
+              <AllCardShow
+                title="Music Movies"
+                subText="Music Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Mystery"
+            element={
+              <AllCardShow
+                title="Mystery Movies"
+                subText="Mystery Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Romance"
+            element={
+              <AllCardShow
+                title="Romance Movies"
+                subText="Romance Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Science Fiction"
+            element={
+              <AllCardShow
+                title="Sci-Fi Movies"
+                subText="Sci-Fi Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/TV Movie"
+            element={
+              <AllCardShow
+                title="Tv Movies"
+                subText="Tv Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Thriller"
+            element={
+              <AllCardShow
+                title="Thriller Movies"
+                subText="Thriller Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/War"
+            element={
+              <AllCardShow
+                title="War Movies"
+                subText="War Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/movie/Western"
+            element={
+              <AllCardShow
+                title="Western Movies"
+                subText="Western Movies"
+                movies={genreMovies}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={genres}
+                type="movie"
+              />
+            }
+          />
+          <Route
+            path="/tv/Action & Adventure"
+            element={
+              <AllCardShow
+                title="Action & Adventure Tv Shows"
+                subText="Action & Adventure Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Animation"
+            element={
+              <AllCardShow
+                title="Animation Tv Shows"
+                subText="Animation Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+          <Route
+            path="/tv/Comedy"
+            element={
+              <AllCardShow
+                title="Comedy Tv Shows"
+                subText="Comedy Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+          <Route
+            path="/tv/Crime"
+            element={
+              <AllCardShow
+                title="Crime Tv Shows"
+                subText="Crime Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Documentary"
+            element={
+              <AllCardShow
+                title="Documentary Tv Shows"
+                subText="Documentary Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Drama"
+            element={
+              <AllCardShow
+                title="Drama Tv Shows"
+                subText="Drama Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Family"
+            element={
+              <AllCardShow
+                title="Family Tv Shows"
+                subText="Family Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Kids"
+            element={
+              <AllCardShow
+                title="Kids Tv Shows"
+                subText="Kids Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Mystery"
+            element={
+              <AllCardShow
+                title="Mystery Tv Shows"
+                subText="Mystery Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/News"
+            element={
+              <AllCardShow
+                title="News Tv Shows"
+                subText="News Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Reality"
+            element={
+              <AllCardShow
+                title="Reality Tv Shows"
+                subText="Reality Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Sci-Fi & Fantasy"
+            element={
+              <AllCardShow
+                title="Sci-Fi & Fantasy Tv Shows"
+                subText="Sci-Fi & Fantasy Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/tv/Soap"
+            element={
+              <AllCardShow
+                title="Soap Tv Shows"
+                subText="Soap Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+          <Route
+            path="/tv/Talk"
+            element={
+              <AllCardShow
+                title="Talk Tv Shows"
+                subText="Talk Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+          <Route
+            path="/tv/War & Politics"
+            element={
+              <AllCardShow
+                title="War & Politics Tv Shows"
+                subText="War & Politics Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+          <Route
+            path="/tv/Western"
+            element={
+              <AllCardShow
+                title="Western Tv Shows"
+                subText="Western Tv Shows"
+                movies={genreTvShows}
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+                currentUser={currentUser}
+                genres={tvGenres}
+                type="tv"
+              />
+            }
+          />
+
+          <Route
+            path="/person/popular"
+            element={
+              <AllPersonShow
+                title="Spotlight on Popular Personalities"
+                subText="Dive into the world of renowned individuals and discover their achievements."
+                persons={persons}
+                handleSetPersonId={handleSetPersonId}
+                page={page}
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+              />
+            }
+          />
+
+          <Route
+            path="/person/:personId"
+            element={<IndividualPerson personDetails={personData} />}
+          />
         </Routes>
       )}
 
-      <Footer />
+      <Footer currentUser={currentUser} />
     </div>
   );
 };
