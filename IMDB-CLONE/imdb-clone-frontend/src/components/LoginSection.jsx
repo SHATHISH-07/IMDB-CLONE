@@ -4,21 +4,29 @@ import { Link } from "react-router-dom";
 const LoginSection = ({ handleLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State to hold error message
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    handleLogin({ username, password });
+    setErrorMessage(""); // Reset error message before submitting
+
+    // Attempt login and handle error if credentials are incorrect
+    const result = await handleLogin({ username, password });
+
+    if (result !== true) {
+      setErrorMessage(result); // Set error message if login fails
+    }
   };
 
   return (
     <div className="flex justify-center items-center h-[100vh] bg-gray-300 dark:bg-gray-800">
-      <div className="bg-gray-900 dark:bg-gray-900 text-gray-100 dark:text-gray-300 p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
-        <h2 className="text-3xl font-bold text-blue-400 mb-6 text-center">
+      <div className="bg-gray-900 dark:bg-gray-900 text-gray-100 dark:text-gray-300 p-6 sm:p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-400 mb-6 text-center">
           Login
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2 dark:text-gray-200">
+            <label className="block text-sm sm:text-base font-medium mb-2 dark:text-gray-200">
               Username:
             </label>
             <input
@@ -30,7 +38,7 @@ const LoginSection = ({ handleLogin }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2 dark:text-gray-200">
+            <label className="block text-sm sm:text-base font-medium mb-2 dark:text-gray-200">
               Password:
             </label>
             <input
@@ -42,6 +50,13 @@ const LoginSection = ({ handleLogin }) => {
             />
           </div>
 
+          {/* Show error message if credentials are incorrect */}
+          {errorMessage && (
+            <p className="text-red-500 text-sm sm:text-base text-center mt-4">
+              {errorMessage}
+            </p>
+          )}
+
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-600 dark:hover:bg-blue-700"
@@ -49,7 +64,7 @@ const LoginSection = ({ handleLogin }) => {
             Login
           </button>
         </form>
-        <p className="mt-4 text-sm text-center">
+        <p className="mt-4 text-sm sm:text-base text-center">
           Don&apos;t have an account?{" "}
           <Link to="/signup" className="text-blue-400 hover:underline">
             Sign Up

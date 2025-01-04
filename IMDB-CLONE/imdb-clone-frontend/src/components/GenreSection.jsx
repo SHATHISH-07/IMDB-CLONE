@@ -23,7 +23,8 @@ const GenreSection = ({ genres, title, subText, handleSetGenreId, type }) => {
     <div className="px-2 py-10 w-full text-black dark:text-white">
       <div className="flex flex-col   mb-8">
         <h1 className="text-4xl font-semibold text-gray-900 dark:text-gray-100">
-          <i className="fas fa-film mr-2"></i> {title}
+          <i className="fas fa-film text-gray-700 dark:text-gray-300"></i>{" "}
+          {title}
         </h1>
         <p className="text-gray-700 dark:text-gray-400 text-lg mt-2">
           {subText}

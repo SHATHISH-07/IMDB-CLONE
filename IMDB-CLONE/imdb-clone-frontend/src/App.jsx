@@ -115,8 +115,11 @@ const App = () => {
 
       setCurrentUser(loggedInUser);
       navigate("/");
+
+      return true; // Indicate successful login
     } catch (error) {
       console.error("Error logging in:", error.message);
+      return error.message; // Return the error message for display
     }
   };
 
@@ -586,6 +589,7 @@ const App = () => {
                 handleSetMovieId={handleSetMovieId}
                 handleSetGenreId={handleSetGenreId}
                 handleSetPersonId={handleSetPersonId}
+                watchList={watchlist}
               />
             }
           />

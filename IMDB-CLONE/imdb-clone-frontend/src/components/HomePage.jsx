@@ -5,6 +5,8 @@ import GenreSection from "./GenreSection";
 import PersonsScrollComponent from "./PersonScrollComponent";
 import Banner from "./Banner";
 import trendingMovie from "../services/movies/trendingMovie";
+import WatchListHome from "./WatchListHome";
+import WatchList from "../services/watchList";
 
 const HomePage = ({
   trendingMoviesDay,
@@ -26,6 +28,7 @@ const HomePage = ({
   handleSetMovieId,
   handleSetGenreId,
   handleSetPersonId,
+  watchList,
 }) => {
   const [heroPage, setHeroPage] = useState(1);
   const [trendingHeroMovies, setTrendingHeroMovies] = useState([]);
@@ -254,6 +257,14 @@ const HomePage = ({
       <PersonsScrollComponent
         people={persons}
         handleSetPersonId={handleSetPersonId}
+      />
+
+      <WatchListHome
+        title="WatchList"
+        subText="Your WatchList"
+        watchList={watchList}
+        handleSetMovieId={handleSetMovieId}
+        currentUser={currentUser}
       />
     </div>
   );

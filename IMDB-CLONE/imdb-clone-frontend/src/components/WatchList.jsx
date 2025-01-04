@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const WatchList = ({ watchlist, onRemove, handleSetMovieId }) => {
@@ -13,6 +13,10 @@ const WatchList = ({ watchlist, onRemove, handleSetMovieId }) => {
       ),
     [searchQuery, watchlist]
   );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
