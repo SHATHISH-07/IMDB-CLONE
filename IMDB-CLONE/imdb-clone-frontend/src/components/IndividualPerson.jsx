@@ -27,6 +27,10 @@ const IndividualPerson = ({ personDetails }) => {
     }
   }, [personDetails]);
 
+  useEffect(() => {
+    window.scrollBy(0, 0);
+  }, []);
+
   // Render loading if data is not available
   if (!storedPersonDetails) {
     return <div>Loading...</div>;

@@ -39,49 +39,8 @@ const searchPersons = async (query, page = 1, language = "en-US") => {
   }
 };
 
-// Fetch movie credits for a person by ID
-const fetchPersonMovieCredits = async (id) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/movies_credits/${id}`);
-    return response.data;
-  } catch (error) {
-    if (error.response) {
-      console.error("Error response from server:", error.response.data);
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-    } else {
-      console.error("Error setting up request:", error.message);
-    }
-    throw error;
-  }
-};
-
-const fetchPersonTvCredits = async (id) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/tv_credits/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching movie credits:", error.message);
-    throw error;
-  }
-};
-
-// Fetch images for a person by ID
-const fetchPersonImages = async (id) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/images/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching person images:", error.message);
-    throw error;
-  }
-};
-
 export default {
   fetchPopularPersons,
   fetchPersonById,
   searchPersons,
-  fetchPersonMovieCredits,
-  fetchPersonTvCredits,
-  fetchPersonImages,
 };

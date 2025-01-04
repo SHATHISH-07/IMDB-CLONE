@@ -39,6 +39,7 @@ import AllPersonShow from "./components/AllPersonShow";
 import IndividualPerson from "./components/IndividualPerson";
 
 import person from "./services/persons/person";
+import SearchResults from "./components/SearchResults";
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -547,6 +548,11 @@ const App = () => {
         currentUser={currentUser}
         handleLogout={handleLogout}
         handleSetMovieId={handleSetMovieId}
+        page={page}
+        handleNextPage={handleNextPage}
+        handlePreviousPage={handlePreviousPage}
+        genres={genres}
+        tvGenres={tvGenres}
       />
 
       {loading ? (
@@ -628,6 +634,18 @@ const App = () => {
             }
           />
 
+          <Route
+            path="/search/results"
+            element={
+              <SearchResults
+                title="Search Results"
+                subText="Search Results"
+                handleSetMovieId={handleSetMovieId}
+                handleAddToWatchList={handleAddToWatchList}
+                currentUser={currentUser}
+              />
+            }
+          />
           <Route
             path="/trendingMoviesDay"
             element={

@@ -66,6 +66,10 @@ const HomePage = ({
     }
   }, [trendingHeroMovies]);
 
+  useEffect(() => {
+    window.scrollBy(0, 0);
+  });
+
   const handleWatchTrailer = (movie, type) => {
     if (movie) {
       window.open(

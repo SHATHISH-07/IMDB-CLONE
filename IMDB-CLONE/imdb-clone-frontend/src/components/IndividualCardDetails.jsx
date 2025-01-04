@@ -233,7 +233,7 @@ const IndividualCardDetails = ({
             onClick={() =>
               handleAddToWatchListWithLoginCheck(detailedShowCard, type)
             }
-            className="absolute top-0 left-0 bg-transparent cursor-pointer rounded-full opacity-60 hover:opacity-100"
+            className="absolute top-0 left-0 bg-transparent cursor-pointer rounded-full opacity-80 hover:opacity-100"
           >
             <i className="fa-solid fa-bookmark text-black text-6xl lg:text-[60px] border-x-4 border-gray-300"></i>
             <i className="fa-solid fa-plus absolute top-3 lg:top-4 left-5 lg:left-5 text-white text-lg lg:text-lg"></i>

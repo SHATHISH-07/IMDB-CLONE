@@ -7,7 +7,13 @@ import movieSearch from "../services/movies/movieSearch";
 import searchTv from "../services/tvShows/searchTv";
 import "./css/HorizontalCards.css";
 
-const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
+const NavBar = ({
+  currentUser,
+  handleLogout,
+  handleSetMovieId,
+  genres,
+  tvGenres,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -81,6 +87,17 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
 
   const handleNavigateHome = () => {
     navigate("/");
+  };
+
+  const handleSearchResultsShow = () => {
+    navigate("/search/results", {
+      state: {
+        movies: searchResult,
+        type: selectedOption,
+        genres: selectedOption === "movie" ? genres : tvGenres,
+      },
+    });
+    setSearchInput("");
   };
 
   return (
@@ -190,6 +207,7 @@ const NavBar = ({ currentUser, handleLogout, handleSetMovieId }) => {
               />
             </div>
             <button
+              onClick={() => handleSearchResultsShow()}
               className="px-4 py-2 ml-2 bg-gray-600 text-white rounded-md flex-1"
               aria-label="Search Button"
             >

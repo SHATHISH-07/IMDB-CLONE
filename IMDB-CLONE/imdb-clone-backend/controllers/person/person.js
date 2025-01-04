@@ -6,7 +6,6 @@ const personRouter = express.Router();
 const BASE_URL = "https://api.themoviedb.org/3/person/popular";
 const PERSON_ID_URL = "https://api.themoviedb.org/3/person";
 const PERSON_SEARCH_URL = "https://api.themoviedb.org/3/search/person";
-const PERSON_IMAGES_URL = "https://api.themoviedb.org/3/person";
 
 personRouter.get("/popular", async (req, res) => {
   const page = parseInt(req.query.page, 10) || 1;
@@ -66,60 +65,6 @@ personRouter.get("/search", async (req, res) => {
   } catch (error) {
     console.error("Error searching for person:", error.message);
     res.status(500).json({ error: "Failed to search for person." });
-  }
-});
-
-personRouter.get("/movies_credits/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/person/${id}/movie_credits`,
-      {
-        params: {
-          api_key: process.env.API_KEY,
-          id,
-        },
-      }
-    );
-    res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching popular person:", error.message);
-    res.status(500).json({ error: "Failed to fetch popular person" });
-  }
-});
-
-personRouter.get("/tv_credits/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/person/${id}/tv_credits`,
-      {
-        params: {
-          api_key: process.env.API_KEY,
-          id,
-        },
-      }
-    );
-    res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching popular person:", error.message);
-    res.status(500).json({ error: "Failed to fetch popular person" });
-  }
-});
-
-personRouter.get("/images/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const { data } = await axios.get(`${PERSON_IMAGES_URL}/${id}/images`, {
-      params: {
-        api_key: process.env.API_KEY,
-        id,
-      },
-    });
-    res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching person images:", error.message);
-    res.status(500).json({ error: "Failed to fetch person images" });
   }
 });
 
