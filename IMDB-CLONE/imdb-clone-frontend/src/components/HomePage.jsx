@@ -170,7 +170,7 @@ const HomePage = ({
         handleAddToWatchList={handleAddToWatchList}
         isLoggedIn={currentUser}
         handleSetMovieId={handleSetMovieId}
-        navigator="nowPlayingMovie"
+        navigator="nowPlayingMovies"
       />
 
       <GenreSection
