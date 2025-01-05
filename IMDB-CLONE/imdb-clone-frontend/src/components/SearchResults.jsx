@@ -102,7 +102,7 @@ const SearchResults = ({
       </div>
 
       {/* Title Section */}
-      <div className="m-5 flex flex-col justify-center items-center text-center dark:text-white">
+      <div className="m-3 flex flex-col justify-center items-center text-center dark:text-white">
         <h1 className="text-2xl sm:text-4xl font-bold">
           <i className="fa-solid fa-film mr-2"></i>
           {title}

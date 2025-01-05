@@ -177,12 +177,12 @@ const IndividualCardDetails = ({
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row justify-between dark:text-white p-5">
+      <div className="flex flex-col lg:flex-row justify-between dark:text-white p-3">
         <div className="flex-1">
           <h1 className="text-2xl md:text-4xl">
             {detailedShowCard.original_title || detailedShowCard.original_name}
           </h1>
-          <div className="flex flex-wrap gap-x-5 mt-2 text-sm md:text-lg">
+          <div className="flex flex-wrap gap-x-5  text-sm md:text-lg">
             <p>
               {detailedShowCard.release_date || detailedShowCard.first_air_date}
             </p>

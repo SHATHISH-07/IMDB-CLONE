@@ -134,7 +134,7 @@ const AllPersonShow = ({
               alt={person.name}
               className="w-[300px] h-[300px] rounded-full object-cover transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
             />
-            <div className="text-center mt-2">
+            <div className="text-center ">
               <h2 className="text-lg font-semibold">{person.name}</h2>
               <button
                 onClick={(e) => {
