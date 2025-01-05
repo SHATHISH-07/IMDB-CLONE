@@ -40,7 +40,7 @@ const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("./dist"));
 
 // connect to MongoDB
 mongoose.set("strictQuery", false);
@@ -52,11 +52,6 @@ mongoose
   .catch((error) => {
     logger.error("error connecting to MongoDB:", error.message);
   });
-
-// static files
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 
 // user, login, watchList
 app.use("/api/users", userRouter);

@@ -90,6 +90,7 @@ const NavBar = ({
   };
 
   const handleSearchResultsShow = () => {
+    if (searchResult.length === 0) return;
     navigate("/search/results", {
       state: {
         movies: searchResult,

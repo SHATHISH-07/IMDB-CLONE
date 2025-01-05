@@ -227,7 +227,7 @@ const IndividualCardDetails = ({
                 : ""
             })`,
           }}
-          className="w-full lg:w-[25%] h-60 lg:h-full bg-center bg-cover rounded-2xl relative max-w-full"
+          className="w-full lg:w-[25%] h-60 lg:h-full bg-center bg-cover rounded-r-2xl rounded-bl-2xl relative max-w-full"
         >
           <div
             onClick={() =>
