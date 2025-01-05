@@ -189,7 +189,7 @@ const AllPersonShow = ({
         >
           <div
             ref={popupRef}
-            className="bg-white dark:bg-gray-900 p-6 rounded-lg w-[90%] max-w-[800px] relative flex flex-col sm:flex-row shadow-2xl"
+            className="bg-white dark:bg-gray-900 p-6 rounded-lg w-[90%] lg:w-[60%] relative flex flex-col md:flex-row shadow-2xl"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside popup
           >
             {/* Close Button */}

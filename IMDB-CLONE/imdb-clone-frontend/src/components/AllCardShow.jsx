@@ -120,7 +120,7 @@ const AllCardShow = ({
         {movies.map((movie) => (
           <div
             key={movie.id}
-            className="w-[90%] sm:w-[250px] h-[50vh] sm:h-[55vh] relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            className="w-[90%] sm:w-[250px] h-[50vh] md:h-[55vh] relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
             style={{
               backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
               backgroundSize: "cover",
@@ -209,7 +209,7 @@ const AllCardShow = ({
       {/* Modal for Movie Details */}
       {isModalOpen && selectedMovie && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white dark:bg-gray-900 dark:text-white p-4 sm:p-6 rounded-lg w-[90%] sm:w-[60%] flex flex-col sm:flex-row">
+          <div className="bg-white dark:bg-gray-900 dark:text-white p-4 sm:p-6 rounded-lg w-[90%] lg:w-[60%] flex flex-col sm:flex-row">
             <img
               src={`https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`}
               alt={selectedMovie.title}
