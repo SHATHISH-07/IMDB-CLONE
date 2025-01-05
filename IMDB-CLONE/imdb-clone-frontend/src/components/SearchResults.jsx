@@ -113,11 +113,11 @@ const SearchResults = ({
       </div>
 
       {/* Movies Grid */}
-      <div className="flex flex-wrap justify-center sm:justify-between gap-5 mx-5 pb-5">
+      <div className="flex flex-wrap justify-center sm:justify-between gap-10 mx-5 pb-5">
         {movies.map((movie) => (
           <div
             key={movie.id}
-            className="w-[90%] sm:w-[250px] h-[70vh] sm:h-[55vh] relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            className="w-[80%] sm:w-[250px] h-[50vh] sm:h-[55vh] relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
             style={{
               backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
               backgroundSize: "cover",
