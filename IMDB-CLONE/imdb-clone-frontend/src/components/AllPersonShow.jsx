@@ -85,7 +85,7 @@ const AllPersonShow = ({
           className="w-[500px]  p-3 mb-10 rounded-lg bg-gray-300 dark:bg-gray-800 border border-gray-700 dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-gray-400"
         />
         {searchResult.length > 0 && (
-          <div className="absolute top-[280px] bg-gray-300 dark:bg-gray-900 w-[700px] h-[450px] shadow-lg rounded-lg z-10 overflow-y-scroll scrollbar-custom">
+          <div className="absolute top-[450px] md:top-[280px] bg-gray-300 dark:bg-gray-900 w-[300px] md:w-[700px] md:h-[450px] shadow-lg rounded-lg z-10 overflow-y-scroll scrollbar-custom">
             {searchResult.map((result) => (
               <div
                 key={result.id}
