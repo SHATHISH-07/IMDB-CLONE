@@ -113,7 +113,7 @@ const SearchResults = ({
       </div>
 
       {/* Movies Grid */}
-      <div className="flex flex-wrap justify-center sm:justify-between gap:10 sm:gap-5 mx-5 pb-5">
+      <div className="flex flex-wrap justify-center sm:justify-between gap-10 sm:gap-5 mx-5 pb-5">
         {movies.map((movie) => (
           <div
             key={movie.id}
