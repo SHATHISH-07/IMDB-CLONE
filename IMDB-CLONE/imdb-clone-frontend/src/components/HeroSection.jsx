@@ -46,7 +46,7 @@ const HeroSection = ({
         {movie ? (
           <div className="flex flex-col md:flex-row gap-6">
             <div
-              className="h-[70vh] md:h-[85vh] w-full lg:w-[70%] bg-cover flex items-end rounded-lg border border-black relative overflow-hidden"
+              className="h-[80vh] md:h-[85vh] w-full lg:w-[70%] bg-cover flex items-end rounded-lg border border-black relative overflow-hidden"
               style={{
                 backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
                 backgroundPosition: "center top",
