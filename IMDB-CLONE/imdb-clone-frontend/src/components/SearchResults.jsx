@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./css/HorizontalCards.css";
 
 const SearchResults = ({
   title,
@@ -195,7 +196,7 @@ const SearchResults = ({
               <p className="text-base sm:text-lg">
                 Genres: {getGenreNames(selectedMovie.genre_ids)}
               </p>
-              <p className="text-base sm:text-lg mt-2">
+              <p className="text-base h-[20vh] overflow-y-auto sm:h-[20vh] scrollbar-custom sm:text-lg mt-2">
                 {selectedMovie.overview}
               </p>
               <div className="mt-4 flex gap-4">
@@ -203,13 +204,14 @@ const SearchResults = ({
                   onClick={() => handleAddToWatchlistClick(selectedMovie)}
                   className="px-4 py-2 text-blue-600 hover:bg-gray-300 dark:hover:bg-gray-400 bg-gray-200 rounded"
                 >
-                  Add to Watchlist
+                  <i className="fa-solid fa-plus"></i> Add to Watchlist
                 </button>
                 <button
                   onClick={() => handleWatchTrailer(selectedMovie, type)}
                   className="px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300 dark:hover:bg-gray-400 rounded"
                 >
-                  Watch Trailer
+                  <i className="hidden fa-solid fa-play sm:block"></i> Watch
+                  Trailer
                 </button>
                 <button
                   onClick={closeModal}

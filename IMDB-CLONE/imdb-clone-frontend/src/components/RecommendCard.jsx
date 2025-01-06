@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./css/HorizontalCards.css";
 
 const RecommendCard = ({
   movies,
@@ -206,7 +207,7 @@ const RecommendCard = ({
                   </span>
                   <span>{getGenreNames(selectedMovie.genre_ids)}</span>
                 </div>
-                <div className="mt-4 dark:text-white">
+                <div className="mt-4 dark:text-white h-[20vh] overflow-y-auto scrollbar-custom">
                   <p>{selectedMovie.overview || "No overview available."}</p>
                 </div>
               </div>

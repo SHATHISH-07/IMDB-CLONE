@@ -299,7 +299,7 @@ const IndividualCardDetails = ({
           <img
             src={selectedImage.replace("/w500", "/original")}
             alt="Movie/TV Show"
-            className="w-[80%] h-[80%] object-cover rounded-lg"
+            className="w-[80%] h-[80%] sm:object-cover rounded-lg"
           />
         </div>
       )}
@@ -413,7 +413,7 @@ const IndividualCardDetails = ({
               {images.map((image) => (
                 <div
                   key={image.file_path}
-                  className="flex-none w-[350px] h-[250px] bg-gray-800 rounded-lg overflow-hidden cursor-pointer" // Increased width and height of image cards
+                  className="flex-none w-[300px] h-[250px] bg-gray-800 rounded-lg overflow-hidden cursor-pointer" // Increased width and height of image cards
                   onClick={() =>
                     openModal(
                       `https://image.tmdb.org/t/p/w500${image.file_path}`
